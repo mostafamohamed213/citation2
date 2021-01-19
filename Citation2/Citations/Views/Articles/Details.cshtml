@@ -1,0 +1,878 @@
+﻿@model Citations.Models.Article
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<h4>Article</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <input asp-for="Articleid" class="form-control" id="id" style="visibility:hidden" />
+        <div class="form-group">
+            <label asp-for="Articletittle" class="control-label"></label>
+            <input asp-for="Articletittle" class="form-control" id="Articletittle" readonly />
+            <span asp-validation-for="Articletittle" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ArticletittleEn" class="control-label"></label>
+            <input asp-for="ArticletittleEn" class="form-control" id="ArticletittleEn" readonly />
+            <span asp-validation-for="ArticletittleEn" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="BriefQuote" class="control-label"></label>
+            <input asp-for="BriefQuote" class="form-control" id="BriefQuote" readonly />
+            <span asp-validation-for="BriefQuote" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="BriefQuoteEn" class="control-label"></label>
+            <input asp-for="BriefQuoteEn" class="form-control" id="BriefQuoteEn" readonly />
+            <span asp-validation-for="BriefQuoteEn" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="NumberOfCitations" class="control-label"></label>
+            <input asp-for="NumberOfCitations" class="form-control" id="NumberOfCitations" readonly />
+            <span asp-validation-for="NumberOfCitations" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="NumberOfReferences" class="control-label"></label>
+            <input asp-for="NumberOfReferences" class="form-control" id="NumberOfReferences" readonly />
+            <span asp-validation-for="NumberOfReferences" class="text-danger"></span>
+        </div>
+        @*<div class="form-group">
+            <label asp-for="ArticleIssue" class="control-label"></label>
+            <select asp-for="ArticleIssue" class="form-control" asp-items="ViewBag.ArticleIssue"></select>
+            <span asp-validation-for="ArticleIssue" class="text-danger"></span>
+
+        </div>*@
+        @if (Model.KeyWords.Count() != 0)
+        {
+            <div class="form-group">
+                <select asp-for="KeyWords" asp-items="ViewBag.key" id="multiSelectDropDown" class="form-control" multiple="multiple" disabled></select>
+            </div>
+        }
+        @if (Model.ArticleIssue != 0)
+        {
+            <div class="form-group">
+                <table class="table table-bordered ">
+                    <tr>
+                        <th>المؤسسة</th>
+                        <th>المجله</th>
+                        <th>العدد</th>
+                        <th>اصدار العدد</th>
+                    </tr>
+                    <tr class="mycontainers2" id="mainrows2">
+                        <td>
+
+                            <select class="pcs2 form-control" asp-items="ViewBag.institution" asp-for="@Model.ArticleIssueNavigation.MagazineIssue.Magazine.Institutionid" disabled>
+                            </select>
+
+                        </td>
+                        <td>
+                            <select class="products form-control" disabled>
+                                <option value="@Model.ArticleIssueNavigation.MagazineIssue.Magazineid">@Model.ArticleIssueNavigation.MagazineIssue.Magazine.Name</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <select class="products2 form-control" disabled>
+                                <option value="@Model.ArticleIssueNavigation.MagazineIssue.Issueid">@Model.ArticleIssueNavigation.MagazineIssue.Issuenumber</option>
+                            </select>
+                        </td>
+
+                        <td>
+                            <select class="products3 form-control" disabled>
+                                <option value="@Model.ArticleIssueNavigation.IssueOfIssueid">@Model.ArticleIssueNavigation.IssuenumberOfIssue</option>
+                            </select>
+                        </td>
+
+
+                    </tr>
+                </table>
+
+
+                @*<select asp-for="ArticleIssue" class="form-control" asp-items="ViewBag.ArticleIssue"></select>*@
+            </div>
+        }
+        <hr />
+        @if (Model.ArticleAuthores.Count() != 0)
+        {
+            <table class="table table-bordered">
+                <tr>
+                    <th>المؤلف</th>
+                    <th>المؤلف الاساسي ؟</th>
+
+                </tr>
+                @foreach (var x in Model.ArticleAuthores)
+                {
+                    <tr class="mycontainers bg-success">
+                        <td>
+                            <select class="pcs rounded" style="width:100%">
+                                <option value="@x.Authorid">@x.Author.Name</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="radio" name="mas" class="mas" @(Html.Raw(x.MainAuthor ? "checked=\"checked\"" : ""))>
+                        </td>
+
+                    </tr>
+                }
+            </table>
+
+        }
+
+
+
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="Active" disabled /> @Html.DisplayNameFor(model => model.Active)
+            </label>
+        </div>
+
+
+    </div>
+</div>
+
+<!-- Large modal -->
+<button type="button"  class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Referance</button>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" id="modal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3 mr-0">
+                            type of source
+                        </div>
+                        <div class="col-md-4 ml-0">
+                            <select class="form-control" asp-items="ViewBag.sources" id="source" onchange="cs()"></select>
+                        </div>
+                        <div class="col-md-4 ml-0">
+                            <select class="form-control" id="ex" onchange="ct()">
+                                <option value="1">New</option>
+                                <option value="2">Already Exist</option>
+                            </select>
+                        </div>
+
+                    </div>
+                  
+
+                    <div class="row" id="exist">
+                        <div class="col-md-12 ml-0" id="article">
+                            <select class="form-control" asp-items="ViewBag.Article" id="articleref"></select>
+                        </div>
+                        <div class="col-md-12 ml-0" id="book">
+                            <select class="form-control" asp-items="ViewBag.Book" id="bookref"></select>
+                        </div>
+                        <div class="col-md-12 ml-0" id="conf">
+                            <select class="form-control" asp-items="ViewBag.Conference" id="conferenceref"></select>
+                        </div>
+                        <div class="col-sm-3 mr-0 page">
+                            page
+                        </div>
+                        <div class="col-sm-8 page">
+                            <input type="text" class="form-control" id="pageexist" />
+                        </div>
+                    </div>
+                   
+                    <div class="row" id="new">
+                        <div class="col-sm-3 mr-0 title">
+                            title
+                        </div>
+                        <div class="col-sm-8 title">
+                            <input type="text" class="form-control" id="title" onkeypress="removeerror()" />
+                            <span class="error text-danger" style="visibility:hidden">title  required</span>
+                        </div>
+
+                        <div class="col-sm-3 mr-0 page">
+                            page
+                        </div>
+                        <div class="col-sm-8 page">
+                            <input type="text" class="form-control" id="pagenew" />
+                        </div>
+
+                        <div class="col-sm-3 mr-0 year" id="year1">
+                            year
+                        </div>
+                        <div class="col-sm-8 year" id="year2">
+                            <input type="text" class="form-control" id="year" />
+                        </div>
+
+                        <div class="col-sm-3 mr-0 year" id="cpn1">
+                            conference publication name
+                        </div>
+                        <div class="col-sm-8 year" id="cpn2">
+                            <input type="text" class="form-control" id="cpn" />
+                        </div>
+
+                        <div class="col-sm-3 mr-0" id="country1">
+                            country
+                        </div>
+                        <div class="col-sm-8" id="country2">
+                            <select class="form-control" asp-items="ViewBag.country" id="country"></select>
+                        </div>
+                        <div class="col-sm-3 mr-0 publisher" id="p1">
+                            publisher
+                        </div>
+                        <div class="col-sm-8 publisher" id="p2">
+                            <select class="form-control" asp-items="ViewBag.publisher" id="publisher"></select>
+                        </div>
+                        <div class="form-group" id="issue">
+                            <table class="table table-bordered ">
+                                <tr>
+                                    <th width="25%">المؤسسة</th>
+                                    <th width="25%">المجله</th>
+                                    <th width="25%">العدد </th>
+                                    <th width="25%">اصدار العدد</th>
+                                </tr>
+                                <tr class="mycontainer2" id="mainrow2">
+                                    <td>
+
+                                        <select id="productCategory2" class="pc2 form-control" asp-items="ViewBag.institution" onchange="LoadProduct(this)">
+                                            <option value="0">اختار المؤسسة</option>
+                                        </select>
+                                        <input type="button" class="btn btn-primary" value="مؤسسة جديده؟" onclick="addinstitution()" />
+
+                                    </td>
+                                    <td>
+                                        <select id="product" class="product form-control" onchange="LoadProduct2(this)">
+                                        </select>
+                                        <input type="button" class="btn btn-primary" value="مجلة جديده؟" onclick="addmagazine()" />
+                                    </td>
+                                    <td>
+                                        <select id="product2" class="product2 form-control" onchange="LoadProduct3(this)">
+                                        </select>
+                                        <input type="button" class="btn btn-primary" value="عدد جديد؟" onclick="issue()" />
+                                    </td>
+
+                                    <td>
+                                        <select id="product3" class="product3 form-control">
+                                        </select>
+                                        <input type="button" class="btn btn-primary" value="اصدار عدد جديد؟" onclick="issueversion()" />
+                                    </td>
+
+
+                                </tr>
+                            </table>
+
+
+                            @*<select asp-for="ArticleIssue" class="form-control" asp-items="ViewBag.ArticleIssue"></select>*@
+                        </div>
+
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>المؤلف</th>
+                                <th>المؤلف الاساسي ؟</th>
+                                <th>اضافه</th>
+                            </tr>
+                            <tr class="mycontainer" id="mainrow">
+                                <td>
+                                    <select id="productCategory" class="pc form-control" asp-items="ViewBag.Authors"></select>
+
+                                </td>
+                                <td>
+                                    <input type="radio" id="m" name="ma" class="ma">
+                                </td>
+
+                                <td>
+                                    <input type="button" id="add" value="add" style="width:80px" class="btn btn-success" />
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="button" class="btn btn-primary" value="اضافة مؤلف جديد؟" onclick="addauthor()" />
+                    
+                    
+                        <div id="oi">
+                            <table class="table table-responsive" id="orderdetailsItems"></table>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success"   onclick="save()">Save</button>
+                    </div>
+
+                </div>
+                </div>
+                </div>
+            </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+<script>
+        function LoadProduct(categoryDD) {
+
+            $.ajax({
+                type: "GET",
+                url: "/Articles/getmagazine",
+                data: { 'Institutionid': $(categoryDD).val() },
+                success: function (data) {
+                    //render products to appropriate dropdown
+                    renderProduct($(categoryDD).parents('.mycontainer2').find('select.product'), data).then(LoadProduct2($(categoryDD).parents('.mycontainer2').find('select.product')).then(LoadProduct3($(categoryDD).parents('.mycontainer2').find('select.product2'))));
+
+
+
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        }
+
+        async function renderProduct(element, data) {
+            //render product
+            var $ele = $(element);
+            $ele.empty();
+
+            $.each(data, function (i, val) {
+                $ele.append($('<option/>').val(val.Magazineid).text(val.Name));
+            })
+            return;
+        }
+
+
+        //fetch products
+        async function LoadProduct2(categoryDD) {
+
+            $.ajax({
+                type: "GET",
+                url: "/Articles/getissue",
+                data: { 'Magazineid': $(categoryDD).val() },
+                success: function (data) {
+                    //render products to appropriate dropdown
+                    renderProduct2($(categoryDD).parents('.mycontainer2').find('select.product2'), data).then(LoadProduct3($(categoryDD).parents('.mycontainer2').find('select.product2')));
+
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+            return;
+        }
+
+        async function renderProduct2(element, data) {
+            //render product
+            var $ele = $(element);
+            $ele.empty();
+
+            $.each(data, function (i, val) {
+                $ele.append($('<option/>').val(val.Issueid).text(val.Issuenumber));
+            })
+            return;
+        }
+
+
+        function LoadProduct3(categoryDD) {
+
+            $.ajax({
+                type: "GET",
+                url: "/Articles/getissueversion",
+                data: { 'magazineissueid': $(categoryDD).val() },
+                success: function (data) {
+                    //render products to appropriate dropdown
+                    renderProduct3($(categoryDD).parents('.mycontainer2').find('select.product3'), data);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        }
+
+        function renderProduct3(element, data) {
+            //render product
+            var $ele = $(element);
+            $ele.empty();
+
+            $.each(data, function (i, val) {
+                $ele.append($('<option/>').val(val.IssueOfIssueid).text(val.IssuenumberOfIssue));
+            })
+        }
+
+        function checkForDuplicates(array) {
+            return new Set(array).size !== array.length
+        }
+
+        $(document).ready(function () {
+            $("#multiSelectDropDown").chosen({
+                width: "100%"
+            });
+            $("#add").click(function () {
+                var $newRow = $('#mainrow').clone().removeAttr('id');
+                $('.pc', $newRow).val($('#productCategory').val());
+                if ($('#m').is(':checked')) {
+                    $('.ma', $newRow).prop('checked', true);
+                }
+                else {
+                    $('.ma', $newRow).prop('checked', false);
+                }
+                var yourArray2 = new Array();
+
+                $('#orderdetailsItems  tr').each(function (index, ele) {
+                    yourArray2.push($('.pc', this).val());
+
+                }
+                );
+
+                yourArray2.push($('#productCategory').val());
+
+
+                if (checkForDuplicates(yourArray2) != true) {
+                    $('#add', $newRow).addClass('remove').val('Remove').removeClass('btn-success').addClass('btn-danger');
+                    $('#productCategory,#m,#add', $newRow).removeAttr('id');
+                    $('#orderdetailsItems').append($newRow);
+                }
+
+
+
+            })
+
+            var s = document.getElementById("ex").value;
+            if (s == 1) {
+                document.getElementById("exist").style.display = "none";
+                document.getElementById("new").style.display = "block";
+            }
+            else if (s == 2) {
+                document.getElementById("new").style.display = "none";
+                document.getElementById("exist").style.display = "block";
+            }
+
+            var x = document.getElementById("source").value;
+            if (x == 1) {
+                document.getElementById("country1").style.display = "none";
+                document.getElementById("country2").style.display = "none";
+                document.getElementById("year1").style.display = "none";
+                document.getElementById("year2").style.display = "none";
+                document.getElementById("p1").style.display = "none";
+                document.getElementById("p2").style.display = "none";
+                document.getElementById("issue").style.display = "block";
+                document.getElementById("article").style.display = "block";
+                document.getElementById("book").style.display = "none";
+                document.getElementById("conf").style.display = "none";
+                document.getElementById("cpn1").style.display = "none";
+                document.getElementById("cpn2").style.display = "none";
+            }
+            else if (x == 2) {
+                document.getElementById("country1").style.display = "block";
+                document.getElementById("country2").style.display = "block";
+                document.getElementById("year1").style.display = "block";
+                document.getElementById("year2").style.display = "block";
+                document.getElementById("p1").style.display = "block";
+                document.getElementById("p2").style.display = "block";
+                document.getElementById("issue").style.display = "none";
+                document.getElementById("article").style.display = "none";
+                document.getElementById("book").style.display = "block";
+                document.getElementById("conf").style.display = "none";
+                document.getElementById("cpn1").style.display = "none";
+                document.getElementById("cpn2").style.display = "none";
+            }
+            else if (x == 3) {
+                document.getElementById("country1").style.display = "block";
+                document.getElementById("country2").style.display = "block";
+                document.getElementById("year1").style.display = "block";
+                document.getElementById("year2").style.display = "block";
+                document.getElementById("p1").style.display = "block";
+                document.getElementById("p2").style.display = "block";
+                document.getElementById("issue").style.display = "none";
+                document.getElementById("article").style.display = "none";
+                document.getElementById("book").style.display = "none";
+                document.getElementById("conf").style.display = "block";
+                document.getElementById("cpn1").style.display = "block";
+                document.getElementById("cpn2").style.display = "block";
+            }
+
+        });
+
+        function ct() {
+            var s = document.getElementById("ex").value;
+            if (s == 1) {
+                document.getElementById("exist").style.display = "none";
+                document.getElementById("new").style.display = "block";
+            }
+            else if (s==2)
+            {
+                document.getElementById("new").style.display = "none";
+                document.getElementById("exist").style.display = "block";
+            }
+        }
+
+        function issueversion()
+        {
+            var x = document.getElementById("product2").value;
+            if (x == "") {
+                swal("تحذير","يجب اختيار العدد اولا","warning");
+            }
+            else {
+                //window.location.href = "/IssueOfIssues/Create/" + x;
+                var win = window.open("/IssueOfIssues/Create/" + x, "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+                var timer = setInterval(function () {
+                    if (win.closed) {
+                        clearInterval(timer);
+                        location.reload();
+                    }
+                }, 0);
+            }
+    }
+
+    function issue() {
+        var x = document.getElementById("product").value;
+        if (x == "") {
+            swal("تحذير", "يجب اختيار المجله اولا", "warning");
+        }
+        else {
+       
+        //window.location.href = "/IssueOfIssues/Create/" + x;
+        var win = window.open("/MagazineIssues/Create/" + x, "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+        var timer = setInterval(function () {
+            if (win.closed) {
+                clearInterval(timer);
+                location.reload();
+            }
+        }, 0);
+           }
+    }
+
+    function addmagazine() {
+     
+        //window.location.href = "/IssueOfIssues/Create/" + x;
+        var win = window.open("/Magazines/Create", "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+        var timer = setInterval(function () {
+            if (win.closed) {
+                clearInterval(timer);
+                location.reload();
+            }
+        }, 0);
+    }
+
+    function addinstitution() {
+   
+        var win = window.open("/Institutions/Create", "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+        var timer = setInterval(function () {
+            if (win.closed) {
+                clearInterval(timer);
+                location.reload();
+            }
+        }, 0);
+    }
+
+    function addauthor() {
+
+        var win = window.open("/Authors/Create", "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+        var timer = setInterval(function () {
+            if (win.closed) {
+                clearInterval(timer);
+                location.reload();
+            }
+        }, 0);
+    }
+
+        function cs() {
+            var x = document.getElementById("source").value;
+            if (x == 1) {
+                document.getElementById("country1").style.display = "none";
+                document.getElementById("country2").style.display = "none";
+                document.getElementById("year1").style.display = "none";
+                document.getElementById("year2").style.display = "none";
+                document.getElementById("p1").style.display = "none";
+                document.getElementById("p2").style.display = "none";
+                document.getElementById("issue").style.display = "block";
+                document.getElementById("article").style.display = "block";
+                document.getElementById("book").style.display = "none";
+                document.getElementById("conf").style.display = "none";
+                document.getElementById("cpn1").style.display = "none";
+                document.getElementById("cpn2").style.display = "none";
+            }
+            else if (x == 2) {
+                document.getElementById("country1").style.display = "block";
+                document.getElementById("country2").style.display = "block";
+                document.getElementById("year1").style.display = "block";
+                document.getElementById("year2").style.display = "block";
+                document.getElementById("p1").style.display = "block";
+                document.getElementById("p2").style.display = "block";
+                document.getElementById("issue").style.display = "none";
+                document.getElementById("article").style.display = "none";
+                document.getElementById("book").style.display = "block";
+                document.getElementById("conf").style.display = "none";
+                document.getElementById("cpn1").style.display = "none";
+                document.getElementById("cpn2").style.display = "none";
+            }
+            else if (x == 3) {
+                document.getElementById("country1").style.display = "block";
+                document.getElementById("country2").style.display = "block";
+                document.getElementById("year1").style.display = "block";
+                document.getElementById("year2").style.display = "block";
+                document.getElementById("p1").style.display = "block";
+                document.getElementById("p2").style.display = "block";
+                document.getElementById("issue").style.display = "none";
+                document.getElementById("article").style.display = "none";
+                document.getElementById("book").style.display = "none";
+                document.getElementById("conf").style.display = "block";
+                document.getElementById("cpn1").style.display = "block";
+                document.getElementById("cpn2").style.display = "block";
+            }
+
+
+    }
+
+    $('#orderdetailsItems').on('click', '.remove', function () {
+        $(this).parents('tr').remove();
+    });
+
+     function removeerror()
+    {
+         $('#title').siblings('span.error').css('visibility', 'hidden');
+    }
+    async function save()
+        {
+            var articleid = document.getElementById("id").value;
+            var title = document.getElementById("title").value;
+            var pagenew = document.getElementById("pagenew").value;
+            var pageexist = document.getElementById("pageexist").value;
+            var year = document.getElementById("year").value;
+            var publisher = document.getElementById("publisher").value;
+            var country = document.getElementById("country").value;
+            var conferencepublicationname = document.getElementById("cpn").value;
+            var issueversion = document.getElementById("product3").value;
+            var articlerefid = document.getElementById("articleref").value;
+            var bookrefid = document.getElementById("bookref").value;
+            var conferencerefid = document.getElementById("conferenceref").value;
+
+            var validform = true;
+            if ($('#title').val() == "") {
+
+                $('#title').siblings('span.error').css('visibility', 'visible');
+                validform = false;
+        }
+
+            var source = document.getElementById("source").value;
+        var exornew = document.getElementById("ex").value;
+    
+        if (source == 1) {
+
+            if (exornew == 1) {
+                if (validform == true) {
+                    if (issueversion == "") {
+                        swal("تحذير", "يجب ادخال اصدار العدد!", "warning")
+                    }
+                    else {
+                        if (await SendAuthors() == true) {
+                            $.ajax({
+                                data: { articleid: articleid, Articletittle: title, ArticleIssue: issueversion, page: pagenew },
+                                url: "@Url.Action("SaveResourceNewArticle", "Articles")",
+                                success: async function (result) {
+                                    if (result.success == false) {
+
+                                        swal("Failed!", result.responseText, result.type)
+                                    }
+                                    else {
+
+                                        await swal("Done", "Added Successflly!", "success")
+                                        location.reload();
+                                        //$('#modal').modal('toggle');
+
+                                    }
+                                },
+                                error: function (result) { swal("Failed!", "Something went Wrong", "error") }
+                            });
+
+                        }
+                        else {
+                            alert("faild");
+                        }
+                    }
+                }
+                }
+                else if (exornew == 2) {
+                    $.ajax({
+                        data: { articleid: articleid, articlerefid: articlerefid, page: pageexist },
+                        url: "@Url.Action("SaveResourceExistArticle", "Articles")",
+                        success: async function (result) {
+                            if (result.success == false) {
+
+                                swal("Failed!", result.responseText, result.type)
+                            }
+                            else {
+
+                                await swal("Done", "Added Successflly!", "success")
+
+                                //$('#modal').modal('toggle');
+                                location.reload();
+
+                            }
+                        },
+                        error: function (result) { swal("Failed!", "Something went Wrong", "error") }
+                    });
+
+
+                }
+            }
+            else if (source == 2) {
+                if (exornew == 1) {
+                    if (validform == true) {
+                        if (await SendAuthors() == true) {
+                            $.ajax({
+                                data: { articleid: articleid, Booktittle: title, Year: year, Country: country, Publisherid: publisher, page: pagenew },
+                                url: "@Url.Action("SaveResourceNewBook", "Articles")",
+                                success: async function (result) {
+                                    if (result.success == false) {
+
+                                        swal("Failed!", result.responseText, result.type)
+                                    }
+                                    else {
+
+                                        await swal("Done", "Added Successflly!", "success")
+
+                                        //$('#modal').modal('toggle');
+                                        location.reload();
+
+                                    }
+                                },
+                                error: function (result) { swal("Failed!", "Something went Wrong", "error") }
+                            });
+
+                        }
+                        else {
+                            alert("faild");
+                        }
+                    }
+
+                }
+                else if (exornew == 2) {
+                    $.ajax({
+                        data: { articleid: articleid, bookrefid: bookrefid, page: pageexist },
+                        url: "@Url.Action("SaveResourceExistBook", "Articles")",
+                        success: async function (result) {
+                            if (result.success == false) {
+
+                                swal("Failed!", result.responseText, result.type)
+                            }
+                            else {
+
+                                await swal("Done", "Added Successflly!", "success")
+                                location.reload();
+                                //$('#modal').modal('toggle');
+
+                            }
+                        },
+                        error: function (result) { swal("Failed!", "Something went Wrong", "error") }
+                    });
+
+
+                }
+            }
+            else if (source == 3) {
+                if (exornew == 1) {
+                    if (validform == true) {
+                        if (await SendAuthors() == true) {
+                            $.ajax({
+                                data: { articleid: articleid, Conferencetittle: title, Year: year, ConferencePublicationName: conferencepublicationname, Country: country, Publisherid: publisher, page: pagenew },
+                                url: "@Url.Action("SaveResourceNewConference", "Articles")",
+                                success: async function (result) {
+                                    if (result.success == false) {
+
+                                        swal("Failed!", result.responseText, result.type)
+                                    }
+                                    else {
+
+                                        await swal("Done", "Added Successflly!", "success")
+
+                                        //$('#modal').modal('toggle');
+                                        location.reload();
+
+                                    }
+                                },
+                                error: function (result) { swal("Failed!", "Something went Wrong", "error") }
+                            });
+
+                        }
+                        else {
+                            alert("faild");
+                        }
+                    }
+                }
+                else if (exornew == 2) {
+                    $.ajax({
+                        data: { articleid: articleid, conferencerefid: conferencerefid, page: pageexist },
+                        url: "@Url.Action("SaveResourceExistConference", "Articles")",
+                        success: async function (result) {
+                            if (result.success == false) {
+
+                                swal("Failed!", result.responseText, result.type)
+                            }
+                            else {
+
+                                await swal("Done", "Added Successflly!", "success")
+                                location.reload();
+                                //$('#modal').modal('toggle');
+
+                            }
+                        },
+                        error: function (result) { swal("Failed!", "Something went Wrong", "error") }
+                    });
+
+
+                }
+            }
+        
+
+
+    }
+
+    async function SendAuthors()
+    {
+         var things = [];
+             $('#orderdetailsItems  tr').each(function (index, ele) {
+
+                 var articleauthors = {
+
+                     author: parseInt($('.pc', this).val()),
+                     main: $('.ma', this).is(':checked') ? true : false
+
+                 }
+                 things.push(articleauthors);
+
+             })
+
+
+
+             var data = {
+                 articleauthors1: things
+                 }
+
+                 return new Promise((resolve, reject) => {
+                     $.ajax({
+                         type: 'POST',
+                         contentType: 'application/json; charset=utf-8',
+                         url: "@Url.Action("save", "Articles")",
+                         data: JSON.stringify(data),
+                         success: function (result) {
+                             if (result.success == false) {
+                                 reject(result.success);
+
+                             }
+                             else {
+                                 resolve(result.success)
+
+                             }
+
+                         },
+                         error: function () { reject(false); }
+                     });
+                 });
+    }
+</script>
+}
+

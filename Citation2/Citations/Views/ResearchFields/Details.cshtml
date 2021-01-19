@@ -1,0 +1,31 @@
+﻿@model Citations.Models.ResearchField
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>تفاصيل مجال البحث</h1>
+<h1>@Model.Name</h1>
+
+<div>
+    
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Fieldid">تعديل</a> |
+    <a asp-action="Index">عودة لمجالات البحث</a>
+</div>
