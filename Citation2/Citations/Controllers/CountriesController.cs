@@ -18,6 +18,38 @@ namespace Citations.Controllers
             _context = context;
         }
 
+        public IActionResult checkname(String Name, int? Countryid)
+        {
+            if (Name == null)
+            {
+                return Json(data: "الرجاء ادخال اسم صحيح");
+            }
+            if (Countryid == null)
+            {
+                var name = Name.Trim();
+                if (_context.Countries.FirstOrDefault(i => i.Name == name) == null)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            else
+            {
+                var name = Name.Trim();
+                if (_context.Countries.FirstOrDefault(i => i.Countryid != Countryid && i.Name == name) == null)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+
+            }
+        }
         // GET: Countries
         public async Task<IActionResult> Index()
         {

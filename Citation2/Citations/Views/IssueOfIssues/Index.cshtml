@@ -4,8 +4,8 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<h1>إصدارات العدد<span> @ViewBag.Issuenumber</span><span>مجلة @ViewBag.magazine.Name</span><span> مؤسسة @ViewBag.magazine.Institution.Name</span> </h1>
 
-<h2>العدد @ViewBag.Issuenumber </h2>
 
 <p>
     <a asp-action="Create" asp-route-id="@ViewBag.Issueid">إضافة إصدار</a>
@@ -17,7 +17,7 @@
                 @Html.DisplayNameFor(model => model.IssuenumberOfIssue)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateOfPublication)
+               تاريخ النشر
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.MagazineIssue.Issuenumber)
@@ -39,12 +39,12 @@
                     @Html.DisplayFor(modelItem => item.MagazineIssue.Issuenumber)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.IssueOfIssueid">تعديل</a> |
-                    <a asp-action="Details" asp-route-id="@item.IssueOfIssueid">تفاصيل</a> 
+                    <a asp-action="Edit" asp-route-id="@item.IssueOfIssueid" class="fa fa-edit" title="تعديل"></a> |
+                    <a asp-action="Details" asp-route-id="@item.IssueOfIssueid" class="fa fa-eye" title="تفاصيل"></a>
                     @*<a asp-action="Delete" asp-route-id="@item.IssueOfIssueid">Delete</a>*@
                 </td>
             </tr>
         }
     </tbody>
 </table>
-<a asp-action="Index" asp-controller="MagazineIssues" asp-route-id="@ViewBag.magazineid">العودة للإصدارات</a> 
+<a asp-action="Index" asp-controller="MagazineIssues" asp-route-id="@ViewBag.magazineid">العودة للإصدارات</a>

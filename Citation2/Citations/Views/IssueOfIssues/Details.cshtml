@@ -8,25 +8,25 @@
 <h1>تفاصيل</h1>
 
 <div>
-    <h4> <span>@Model.IssuenumberOfIssue</span>الإصدار</h4>
+    <h4> الإصدار <span>@Model.IssuenumberOfIssue</span><span> للعدد @ViewBag.Issuenumber</span><span>مجلة @ViewBag.magazine.Name</span><span> مؤسسة @ViewBag.magazine.Institution.Name</span></h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IssuenumberOfIssue)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.IssuenumberOfIssue)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DateOfPublication)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DateOfPublication)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.MagazineIssue.Issuenumber)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MagazineIssue.Issueid)
         </dd>
     </dl>

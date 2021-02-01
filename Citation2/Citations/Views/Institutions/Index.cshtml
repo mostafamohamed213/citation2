@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>المؤسسات</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -15,24 +15,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-           
-            <th>
-                @Html.DisplayNameFor(model => model.ImpactFactor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PointerH)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberOfCitations)
-            </th>
+         
             <th>
                 @Html.DisplayNameFor(model => model.Active)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CountryNavigation)
+             البلد
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TypeOfInstitutionNavigation)
+               نوع المؤسسه
             </th>
             <th></th>
         </tr>
@@ -43,16 +34,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-           
-            <td>
-                @Html.DisplayFor(modelItem => item.ImpactFactor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PointerH)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfCitations)
-            </td>
+          
             <td>
                 @Html.DisplayFor(modelItem => item.Active)
             </td>
@@ -64,8 +46,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Institutionid">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Institutionid">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Institutionid">Delete</a>
+                <a asp-action="Details" asp-route-id="@item.Institutionid">Details</a> 
             </td>
         </tr>
 }

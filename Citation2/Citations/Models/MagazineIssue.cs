@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -13,7 +15,10 @@ namespace Citations.Models
         }
 
         public int Issueid { get; set; }
-        public int Issuenumber { get; set; }
+        [Remote("CheckIssuenumber", "MagazineIssues", AdditionalFields = "Magazineid,Issueid", HttpMethod = "POST", ErrorMessage = "هذا العدد موجود من قبل ")]
+        [Display(Name = "العدد")]
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
+        public string Issuenumber { get; set; }
         public int Magazineid { get; set; }
 
         public virtual Magazine Magazine { get; set; }

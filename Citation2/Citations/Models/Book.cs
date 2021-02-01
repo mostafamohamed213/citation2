@@ -19,6 +19,7 @@ namespace Citations.Models
         public int? Country { get; set; }
         public int? Publisherid { get; set; }
         public bool Active { get; set; }
+        public string Page { get; set; }
 
         public virtual Country CountryNavigation { get; set; }
         public virtual Publisher Publisher { get; set; }

@@ -33,7 +33,7 @@ namespace Citations.Controllers
         // GET: Authors
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Authors.Where(a=>a.Active==true).ToListAsync());
+            return View(await _context.Authors.Where(a=>a.Active==true||a.Active==false).ToListAsync());
         }
 
         // GET: Authors/Details/5
@@ -67,14 +67,14 @@ namespace Citations.Controllers
         }
 
 
-        //public JsonResult getInstitutions()
+        //public System.Web.Mvc.JsonResult getInstitutions()
         //{
         //    List<Institution> Institution = new List<Institution>();
         //    using (CitationContext dc = new CitationContext())
         //    {
         //        Institution = dc.Institutions.OrderBy(a => a.Name).ToList();
         //    }
-        //    return Json( Institution);
+        //    return new System.Web.Mvc.JsonResult { Data = Institution, JsonRequestBehavior = System.Web.Mvc.JsonRequestBehavior.AllowGet };
         //}
 
         //public System.Web.Mvc.JsonResult getFaculties(int instid)
@@ -167,7 +167,7 @@ namespace Citations.Controllers
                 List<AuthorResearchField> autresfield = new List<AuthorResearchField>();
                 for  (int i=0;i<newarResarchFields.Length;i++)
                 {
-                    var exresfild = _context.ResearchFields.FirstOrDefault(rf => rf.Name.ToLower() == newarResarchFields[i].ToLower());
+                    var exresfild = _context.ResearchFields.FirstOrDefault(rf => rf.Name.Trim().ToLower() == newarResarchFields[i].Trim().ToLower());
                     if (exresfild == null)
                     {
 
@@ -188,7 +188,7 @@ namespace Citations.Controllers
                 List<string> ResarchFieldslst = ResarchFields.ToList();
                 for (int i = 0; i < newarResarchFields.Length; i++)
                 {
-                    string resfieldid = allresearchfields.FirstOrDefault(rf => rf.Name == newarResarchFields[i] ).Fieldid.ToString();
+                    string resfieldid = allresearchfields.FirstOrDefault(rf => rf.Name.Trim() == newarResarchFields[i].Trim()).Fieldid.ToString();
                 ResarchFieldslst.Add(resfieldid);
                 }
              
@@ -388,7 +388,7 @@ namespace Citations.Controllers
                     List<AuthorResearchField> autresfield = new List<AuthorResearchField>();
                     for (int i = 0; i < newarResarchFields.Length; i++)
                     {
-                        var exresfild = _context.ResearchFields.FirstOrDefault(rf => rf.Name.ToLower() == newarResarchFields[i].ToLower());
+                        var exresfild = _context.ResearchFields.FirstOrDefault(rf => rf.Name.Trim().ToLower() == newarResarchFields[i].Trim().ToLower());
                         if (exresfild == null)
                         {
 
@@ -409,7 +409,7 @@ namespace Citations.Controllers
                     List<string> ResarchFieldslst = ResarchFields.ToList();
                     for (int i = 0; i < newarResarchFields.Length; i++)
                     {
-                        string resfieldid = allresearchfields.FirstOrDefault(rf => rf.Name == newarResarchFields[i]).Fieldid.ToString();
+                        string resfieldid = allresearchfields.FirstOrDefault(rf => rf.Name.Trim() == newarResarchFields[i].Trim()).Fieldid.ToString();
                         ResarchFieldslst.Add(resfieldid);
                     }
 

@@ -96,8 +96,15 @@
 
                 @*<select asp-for="ArticleIssue" class="form-control" asp-items="ViewBag.ArticleIssue"></select>*@
             </div>
+            <div class="form-group">
+                <label asp-for="Page" class="control-label"></label>
+                <input asp-for="Page" class="form-control" id="ArticlePage" readonly />
+                <span asp-validation-for="Page" class="text-danger"></span>
+            </div>
+
+            <hr />
         }
-        <hr />
+
         @if (Model.ArticleAuthores.Count() != 0)
         {
             <table class="table table-bordered">
@@ -136,8 +143,41 @@
     </div>
 </div>
 
+@if (Model.ArticleReferenceArticles.Count() != 0)
+{
+    <h3>المصادر</h3>
+    <table class="table table-primary table-striped">
+        <tr>
+            <th>
+                المصدر
+            </th>
+      
+        </tr>
+        @foreach (var item in Model.ArticleReferenceArticles)
+        {
+    <tr>
+        @if (item.Articleref != null)
+        {
+            <td>@item.Articleref.Articletittle </td>
+        }
+        @if (item.Book != null)
+        {
+            <td>@item.Book.Booktittle </td>
+        }
+        @if (item.Conference != null)
+        {
+            <td>@item.Conference.Conferencetittle </td>
+        }
+
+    </tr>
+        }
+
+    </table>
+}
+
+
 <!-- Large modal -->
-<button type="button"  class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Referance</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Add Referance</button>
 
 <div class="modal fade bd-example-modal-lg" tabindex="-1" id="modal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -153,32 +193,28 @@
                         </div>
                         <div class="col-md-4 ml-0">
                             <select class="form-control" id="ex" onchange="ct()">
-                                <option value="1">New</option>
                                 <option value="2">Already Exist</option>
+                                <option value="1">New</option>
                             </select>
                         </div>
 
                     </div>
-                  
+
 
                     <div class="row" id="exist">
                         <div class="col-md-12 ml-0" id="article">
-                            <select class="form-control" asp-items="ViewBag.Article" id="articleref"></select>
+                            <select class="form-control" asp-items="ViewBag.Article" style="width:100%" id="articleref"></select>
                         </div>
                         <div class="col-md-12 ml-0" id="book">
-                            <select class="form-control" asp-items="ViewBag.Book" id="bookref"></select>
+                            <select class="form-control" asp-items="ViewBag.Book" style="width:100%" id="bookref"></select>
                         </div>
                         <div class="col-md-12 ml-0" id="conf">
-                            <select class="form-control" asp-items="ViewBag.Conference" id="conferenceref"></select>
+                            <select class="form-control" asp-items="ViewBag.Conference" style="width:100%" id="conferenceref"></select>
                         </div>
-                        <div class="col-sm-3 mr-0 page">
-                            page
-                        </div>
-                        <div class="col-sm-8 page">
-                            <input type="text" class="form-control" id="pageexist" />
-                        </div>
+                    
+                    
                     </div>
-                   
+
                     <div class="row" id="new">
                         <div class="col-sm-3 mr-0 title">
                             title
@@ -188,12 +224,7 @@
                             <span class="error text-danger" style="visibility:hidden">title  required</span>
                         </div>
 
-                        <div class="col-sm-3 mr-0 page">
-                            page
-                        </div>
-                        <div class="col-sm-8 page">
-                            <input type="text" class="form-control" id="pagenew" />
-                        </div>
+
 
                         <div class="col-sm-3 mr-0 year" id="year1">
                             year
@@ -202,7 +233,7 @@
                             <input type="text" class="form-control" id="year" />
                         </div>
 
-                        <div class="col-sm-3 mr-0 year" id="cpn1">
+                        <div class="col-sm-4 mr-0 year" id="cpn1">
                             conference publication name
                         </div>
                         <div class="col-sm-8 year" id="cpn2">
@@ -263,6 +294,15 @@
                             @*<select asp-for="ArticleIssue" class="form-control" asp-items="ViewBag.ArticleIssue"></select>*@
                         </div>
 
+                        <div class="col-sm-3 mr-0 page">
+                            page
+                        </div>
+                        <div class="col-sm-8 page">
+                            <input type="text" class="form-control" id="pagenew" />
+                        </div>
+
+                        <br />
+                        <hr />
                         <table class="table table-bordered">
                             <tr>
                                 <th>المؤلف</th>
@@ -284,8 +324,8 @@
                             </tr>
                         </table>
                         <input type="button" class="btn btn-primary" value="اضافة مؤلف جديد؟" onclick="addauthor()" />
-                    
-                    
+
+
                         <div id="oi">
                             <table class="table table-responsive" id="orderdetailsItems"></table>
                         </div>
@@ -293,13 +333,13 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-success"   onclick="save()">Save</button>
+                        <button type="button" class="btn btn-success" onclick="save()">Save</button>
                     </div>
 
                 </div>
-                </div>
-                </div>
             </div>
+        </div>
+    </div>
 </div>
 
 
@@ -311,17 +351,20 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 
-<script>
-        function LoadProduct(categoryDD) {
+    <script>
+        async function LoadProduct(categoryDD) {
 
             $.ajax({
                 type: "GET",
                 url: "/Articles/getmagazine",
                 data: { 'Institutionid': $(categoryDD).val() },
-                success: function (data) {
+                success: async function (data) {
                     //render products to appropriate dropdown
-                    renderProduct($(categoryDD).parents('.mycontainer2').find('select.product'), data).then(LoadProduct2($(categoryDD).parents('.mycontainer2').find('select.product')).then(LoadProduct3($(categoryDD).parents('.mycontainer2').find('select.product2'))));
+                    renderProduct($(categoryDD).parents('.mycontainer2').find('select.product'), data);
 
+                    await LoadProduct2($(categoryDD).parents('.mycontainer2').find('select.product'))
+
+                    LoadProduct3($(categoryDD).parents('.mycontainer2').find('select.product2'));
 
 
 
@@ -346,22 +389,23 @@
 
         //fetch products
         async function LoadProduct2(categoryDD) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "GET",
+                    url: "/Articles/getissue",
+                    data: { 'Magazineid': $(categoryDD).val() },
+                    success: function (data) {
+                        //render products to appropriate dropdown
+                        renderProduct2($(categoryDD).parents('.mycontainer2').find('select.product2'), data).then(LoadProduct3($(categoryDD).parents('.mycontainer2').find('select.product2')));
 
-            $.ajax({
-                type: "GET",
-                url: "/Articles/getissue",
-                data: { 'Magazineid': $(categoryDD).val() },
-                success: function (data) {
-                    //render products to appropriate dropdown
-                    renderProduct2($(categoryDD).parents('.mycontainer2').find('select.product2'), data).then(LoadProduct3($(categoryDD).parents('.mycontainer2').find('select.product2')));
-
-
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            })
-            return;
+                        resolve();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        reject();
+                    }
+                })
+            });
         }
 
         async function renderProduct2(element, data) {
@@ -376,7 +420,7 @@
         }
 
 
-        function LoadProduct3(categoryDD) {
+        async function LoadProduct3(categoryDD) {
 
             $.ajax({
                 type: "GET",
@@ -390,16 +434,19 @@
                     console.log(error);
                 }
             })
+            return;
         }
 
-        function renderProduct3(element, data) {
+        async function renderProduct3(element, data) {
             //render product
+
             var $ele = $(element);
             $ele.empty();
 
             $.each(data, function (i, val) {
                 $ele.append($('<option/>').val(val.IssueOfIssueid).text(val.IssuenumberOfIssue));
             })
+            return;
         }
 
         function checkForDuplicates(array) {
@@ -410,6 +457,10 @@
             $("#multiSelectDropDown").chosen({
                 width: "100%"
             });
+            $("#articleref").select2();
+            $("#bookref").select2();
+            $("#conferenceref").select2();
+
             $("#add").click(function () {
                 var $newRow = $('#mainrow').clone().removeAttr('id');
                 $('.pc', $newRow).val($('#productCategory').val());
@@ -533,7 +584,7 @@
             swal("تحذير", "يجب اختيار المجله اولا", "warning");
         }
         else {
-       
+
         //window.location.href = "/IssueOfIssues/Create/" + x;
         var win = window.open("/MagazineIssues/Create/" + x, "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
         var timer = setInterval(function () {
@@ -546,7 +597,7 @@
     }
 
     function addmagazine() {
-     
+
         //window.location.href = "/IssueOfIssues/Create/" + x;
         var win = window.open("/Magazines/Create", "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
         var timer = setInterval(function () {
@@ -558,7 +609,7 @@
     }
 
     function addinstitution() {
-   
+
         var win = window.open("/Institutions/Create", "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
         var timer = setInterval(function () {
             if (win.closed) {
@@ -640,7 +691,7 @@
             var articleid = document.getElementById("id").value;
             var title = document.getElementById("title").value;
             var pagenew = document.getElementById("pagenew").value;
-            var pageexist = document.getElementById("pageexist").value;
+         
             var year = document.getElementById("year").value;
             var publisher = document.getElementById("publisher").value;
             var country = document.getElementById("country").value;
@@ -659,7 +710,7 @@
 
             var source = document.getElementById("source").value;
         var exornew = document.getElementById("ex").value;
-    
+
         if (source == 1) {
 
             if (exornew == 1) {
@@ -670,7 +721,7 @@
                     else {
                         if (await SendAuthors() == true) {
                             $.ajax({
-                                data: { articleid: articleid, Articletittle: title, ArticleIssue: issueversion, page: pagenew },
+                                data: { articleid: articleid, Articletittle: title, ArticleIssue: issueversion, Page: pagenew },
                                 url: "@Url.Action("SaveResourceNewArticle", "Articles")",
                                 success: async function (result) {
                                     if (result.success == false) {
@@ -697,7 +748,7 @@
                 }
                 else if (exornew == 2) {
                     $.ajax({
-                        data: { articleid: articleid, articlerefid: articlerefid, page: pageexist },
+                        data: { articleid: articleid, articlerefid: articlerefid },
                         url: "@Url.Action("SaveResourceExistArticle", "Articles")",
                         success: async function (result) {
                             if (result.success == false) {
@@ -724,7 +775,7 @@
                     if (validform == true) {
                         if (await SendAuthors() == true) {
                             $.ajax({
-                                data: { articleid: articleid, Booktittle: title, Year: year, Country: country, Publisherid: publisher, page: pagenew },
+                                data: { articleid: articleid, Booktittle: title, Year: year, Country: country, Publisherid: publisher, Page: pagenew },
                                 url: "@Url.Action("SaveResourceNewBook", "Articles")",
                                 success: async function (result) {
                                     if (result.success == false) {
@@ -752,7 +803,7 @@
                 }
                 else if (exornew == 2) {
                     $.ajax({
-                        data: { articleid: articleid, bookrefid: bookrefid, page: pageexist },
+                        data: { articleid: articleid, bookrefid: bookrefid },
                         url: "@Url.Action("SaveResourceExistBook", "Articles")",
                         success: async function (result) {
                             if (result.success == false) {
@@ -778,7 +829,7 @@
                     if (validform == true) {
                         if (await SendAuthors() == true) {
                             $.ajax({
-                                data: { articleid: articleid, Conferencetittle: title, Year: year, ConferencePublicationName: conferencepublicationname, Country: country, Publisherid: publisher, page: pagenew },
+                                data: { articleid: articleid, Conferencetittle: title, Year: year, ConferencePublicationName: conferencepublicationname, Country: country, Publisherid: publisher, Page: pagenew },
                                 url: "@Url.Action("SaveResourceNewConference", "Articles")",
                                 success: async function (result) {
                                     if (result.success == false) {
@@ -805,7 +856,7 @@
                 }
                 else if (exornew == 2) {
                     $.ajax({
-                        data: { articleid: articleid, conferencerefid: conferencerefid, page: pageexist },
+                        data: { articleid: articleid, conferencerefid: conferencerefid },
                         url: "@Url.Action("SaveResourceExistConference", "Articles")",
                         success: async function (result) {
                             if (result.success == false) {
@@ -826,7 +877,7 @@
 
                 }
             }
-        
+
 
 
     }
@@ -873,6 +924,6 @@
                      });
                  });
     }
-</script>
+    </script>
 }
 

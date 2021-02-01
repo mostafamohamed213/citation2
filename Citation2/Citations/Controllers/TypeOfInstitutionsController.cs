@@ -23,7 +23,39 @@ namespace Citations.Controllers
         {
             return View(await _context.TypeOfInstitutions.ToListAsync());
         }
+        public IActionResult checkname(String TypeName, int? TypeInstitutionid)
+        {
+            if (TypeName == null)
+            {
+                return Json(data: "الرجاء ادخال اسم صحيح");
+            }
 
+            if (TypeInstitutionid == null)
+            {
+                var TypeName1 = TypeName.Trim();
+                if (_context.TypeOfInstitutions.FirstOrDefault(i => i.TypeName == TypeName1) == null)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            else
+            {
+                var TypeName1 = TypeName.Trim();
+                if (_context.TypeOfInstitutions.FirstOrDefault(i => i.TypeInstitutionid != TypeInstitutionid && i.TypeName == TypeName1) == null)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+
+            }
+        }
         // GET: TypeOfInstitutions/Details/5
         public async Task<IActionResult> Details(int? id)
         {

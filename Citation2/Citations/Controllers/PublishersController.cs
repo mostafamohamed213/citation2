@@ -22,8 +22,8 @@ namespace Citations.Controllers
         // GET: Publishers
         public async Task<IActionResult> Index()
         {
-            var citationContext = _context.Publishers.Include(p => p.CountryNavigation);
-            return View(await citationContext.Where(p=>p.Active==true).ToListAsync());
+            var citationContext = _context.Publishers.Include(p => p.CountryNavigation).Include(p=>p.Institution);
+            return View(await citationContext.ToListAsync());
         }
 
         // GET: Publishers/Details/5
@@ -52,7 +52,8 @@ namespace Citations.Controllers
         {
             ViewData["Country"] = new SelectList(_context.Countries, "Countryid", "Name");
             ViewData["TypeOfPublisher"] = new SelectList(_context.TypeOfPublishers, "TypePublisherid", "TypeName", "--Select Type--");
-            ViewData["Institutions"] = new SelectList(_context.Institutions, "Institutionid", "Name");
+            IQueryable<Institution> existedinst = _context.Publishers.Select(p => p.Institution).Distinct();
+            ViewData["Institutions"] = new SelectList(_context.Institutions.Except(existedinst), "Institutionid", "Name");
             return View();
         }
 
@@ -65,33 +66,48 @@ namespace Citations.Controllers
         {
             try 
             {
-                if (publisher.Institutionid.HasValue&&publisher.TypeOfPublisher.HasValue)
+                if (publisher.Name != null)
                 {
                     publisher.Institutionid = null;
+                }
 
 
-                    
-                }
-                if (publisher.Institutionid.HasValue==false && publisher.TypeOfPublisher.HasValue==false)
+                //if (publisher.Name != null)
+                //{
+                //    publisher.Institutionid = null;
+                //}
+
+
+                if (publisher.Name == null)
                 {
-                    ViewData["TypeOfPublisher"] = new SelectList(_context.TypeOfPublishers, "TypePublisherid", "TypeName", "--Select Type--");
-                    ViewData["Institutions"] = new SelectList(_context.Institutions, "Institutionid", "Name");
-                    ViewData["Country"] = new SelectList(_context.Countries, "Countryid", "Name", publisher.Country);
-                    return View(publisher);
+                    publisher.Name = string.Empty;
                 }
-                if (publisher.TypeOfPublisher==null &&publisher.Institutionid.HasValue)
-                {
-                    publisher.Name = _context.Institutions.FirstOrDefault(ins => ins.Institutionid == publisher.Institutionid).Name;
-                }
+
+
+                //if (publisher.Institutionid.HasValue==false && publisher.TypeOfPublisher.HasValue==false)
+                //{
+                //    ViewData["TypeOfPublisher"] = new SelectList(_context.TypeOfPublishers, "TypePublisherid", "TypeName", "--Select Type--");
+
+                //    IQueryable<Institution> existedinst = _context.Publishers.Select(p => p.Institution).Distinct();
+                //    ViewData["Institutions"] = new SelectList(_context.Institutions.Except(existedinst), "Institutionid", "Name");
+                //    ViewData["Country"] = new SelectList(_context.Countries, "Countryid", "Name", publisher.Country);
+                //    return View(publisher);
+                //}
+                //if (publisher.TypeOfPublisher==null &&publisher.Institutionid.HasValue)
+                //{
+                //    publisher.Name = _context.Institutions.FirstOrDefault(ins => ins.Institutionid == publisher.Institutionid).Name;
+                //}
+
                 _context.Add(publisher);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception e) { 
-
+            catch(Exception e) {
+                string s = e.Message;
             ViewData["TypeOfPublisher"] = new SelectList(_context.TypeOfPublishers, "TypePublisherid", "TypeName", "--Select Type--");
-            ViewData["Institutions"] = new SelectList(_context.Institutions, "Institutionid", "Name");
-            ViewData["Country"] = new SelectList(_context.Countries, "Countryid", "Name", publisher.Country);
+                IQueryable<Institution> existedinst = _context.Publishers.Select(p => p.Institution).Distinct();
+                ViewData["Institutions"] = new SelectList(_context.Institutions.Except(existedinst), "Institutionid", "Name");
+                ViewData["Country"] = new SelectList(_context.Countries, "Countryid", "Name", publisher.Country);
             return View(publisher);
             }
         }
@@ -110,9 +126,11 @@ namespace Citations.Controllers
                 return NotFound();
             }
             ViewData["TypeOfPublisher"] = new SelectList(_context.TypeOfPublishers, "TypePublisherid", "TypeName", publisher.TypeOfPublisher);
-            ViewData["Institutions"] = new SelectList(_context.Institutions, "Institutionid", "Name",publisher.Institutionid);
+            var thisinst = _context.Institutions.Where(ins => ins.Institutionid == _context.Publishers.FirstOrDefault(p=>p.Publisherid==id).Institutionid);
+            IQueryable<Institution> existedinst = _context.Publishers.Select(p => p.Institution).Except(thisinst).Distinct();
+            ViewData["Institutions"] = new SelectList(_context.Institutions.Except(existedinst), "Institutionid", "Name");
             ViewData["Country"] = new SelectList(_context.Countries, "Countryid", "Name", publisher.Country);
-            ViewData["Country"] = new SelectList(_context.Countries, "Countryid", "Name", publisher.Country);
+       
             return View(publisher);
         }
 
@@ -131,22 +149,26 @@ namespace Citations.Controllers
            
                 try
                 {
-                    if (publisher.Institutionid.HasValue && publisher.TypeOfPublisher.HasValue)
+                //if (publisher.Institutionid.HasValue == false && publisher.TypeOfPublisher.HasValue == false)
+                //{
+                //    ViewData["TypeOfPublisher"] = new SelectList(_context.TypeOfPublishers, "TypePublisherid", "TypeName", "--Select Type--");
+                //    var thisinst = _context.Institutions.Where(ins => ins.Institutionid == id);
+                //    IQueryable<Institution> existedinst = _context.Publishers.Select(p => p.Institution).Except(thisinst).Distinct();
+                //    ViewData["Institutions"] = new SelectList(_context.Institutions.Except(existedinst), "Institutionid", "Name");
+                //    ViewData["Country"] = new SelectList(_context.Countries, "Countryid", "Name", publisher.Country);
+                //    return View(publisher);
+                //}
+
+
+                if (publisher.Name != null)
                     {
                         publisher.Institutionid = null;
                     }
-                    if (publisher.Institutionid.HasValue == false && publisher.TypeOfPublisher.HasValue == false)
-                    {
-                        ViewData["TypeOfPublisher"] = new SelectList(_context.TypeOfPublishers, "TypePublisherid", "TypeName", "--Select Type--");
-                        ViewData["Institutions"] = new SelectList(_context.Institutions, "Institutionid", "Name");
-                        ViewData["Country"] = new SelectList(_context.Countries, "Countryid", "Name", publisher.Country);
-                        return View(publisher);
-                    }
+                    
 
-
-                    if (publisher.TypeOfPublisher == null && publisher.Institutionid.HasValue)
+                    if (publisher.Name == null)
                     {
-                        publisher.Name = _context.Institutions.FirstOrDefault(ins => ins.Institutionid == publisher.Institutionid).Name;
+                        publisher.Name = publisher.Name = string.Empty;
                     }
 
 
@@ -155,7 +177,8 @@ namespace Citations.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PublisherExists(publisher.Publisherid))
+                return View(publisher);
+                if (!PublisherExists(publisher.Publisherid))
                     {
                         return NotFound();
                     }

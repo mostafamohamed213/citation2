@@ -5,9 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>تعديل إصدار</h1>
+<h1>تعديل إصدار <span>@Model.IssuenumberOfIssue</span></h1>
 
-<h4>@Model.IssuenumberOfIssue</h4>
+<h4> <span>للعدد @ViewBag.Issuenumber </span> <span>مجلة @ViewBag.magazine.Name</span><span> مؤسسة @ViewBag.magazine.Institution.Name</span></h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -21,10 +21,10 @@
                 <span asp-validation-for="IssuenumberOfIssue" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-                <label asp-for="MagazineIssueId" class="control-label"></label>
-                <select asp-for="MagazineIssueId" class="form-control" asp-items="ViewBag.MagazineIssueId"></select>
-                <span asp-validation-for="MagazineIssueId" class="text-danger"></span>
-            </div>*@
+                    <label asp-for="MagazineIssueId" class="control-label"></label>
+                    <select asp-for="MagazineIssueId" class="form-control" asp-items="ViewBag.MagazineIssueId"></select>
+                    <span asp-validation-for="MagazineIssueId" class="text-danger"></span>
+                </div>*@
             <div class="form-group">
                 <label asp-for="DateOfPublication" class="control-label"></label>
                 <input asp-for="DateOfPublication" class="form-control" />
@@ -38,7 +38,7 @@
 </div>
 
 <div>
-    <a asp-action="Index" asp-route-id=" @ViewBag.Issueid">العودة للإصدارات</a>
+    <a asp-action="Index" asp-route-id="@ViewBag.Issueid">العودة للإصدارات</a>
 </div>
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>

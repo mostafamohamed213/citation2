@@ -4,7 +4,7 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+ 
 
 <h4>Publisher</h4>
 <hr />
@@ -36,7 +36,7 @@
                 </select>
             </div>
         </div>
-                    <div class="form-group">
+                    <div class="form-group"  id="divremoved">
                         <label asp-for="Name" class="control-label"></label>
                         <input asp-for="Name" class="form-control" />
                         <span asp-validation-for="Name" style="color:red"></span>
@@ -64,9 +64,9 @@
             </div>
         </div>
                    
-    <div class="form-group">
+    <div class="form-group" id="divremoved" style="display:none">
         <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" disabled="disabled" />
+        <input asp-for="Name" class="form-control" disabled="disabled"  />
         <span asp-validation-for="Name" style="color:red"></span>
     </div>
                     }
@@ -108,21 +108,28 @@
         var cacheDom = document.getElementById('instit');
         if (id.options[id.selectedIndex].text != 'مؤسسة') {
 
+            if (id.options[id.selectedIndex].text != 'مؤسسة') {
+
+                document.getElementById('Name').disabled = false;
+
+                document.getElementById('divremoved').style.display = "block";
+
+             
+
+                document.getElementById('instit').style.display = "none";
 
 
-            document.getElementById('Name').disabled = false;
+            }
 
-
-            document.getElementById('Name').value = "";
-
-
-            document.getElementById('instit').style.display = "none";
 
 
         } else {
 
+
             document.getElementById('Name').value = "";
+            document.getElementById('divremoved').style.display = "none";
             document.getElementById('Name').disabled = true;
+           
             document.getElementById('instit').style.display = "block";
         }
 

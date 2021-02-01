@@ -98,6 +98,10 @@ namespace Citations.Models
                     .HasColumnName("number_of_references")
                     .HasDefaultValueSql("0");
 
+                entity.Property(e => e.Page)
+                    .HasMaxLength(128)
+                    .HasColumnName("page");
+
                 entity.Property(e => e.ScannedArticlePdf)
                     .HasMaxLength(512)
                     .HasColumnName("scanned_article_pdf");
@@ -151,10 +155,6 @@ namespace Citations.Models
                 entity.Property(e => e.Bookid).HasColumnName("bookid");
 
                 entity.Property(e => e.Conferenceid).HasColumnName("conferenceid");
-
-                entity.Property(e => e.Page)
-                    .HasMaxLength(128)
-                    .HasColumnName("page");
 
                 entity.Property(e => e.TypeSourceid).HasColumnName("type_sourceid");
 
@@ -310,6 +310,10 @@ namespace Citations.Models
 
                 entity.Property(e => e.Country).HasColumnName("country");
 
+                entity.Property(e => e.Page)
+                    .HasMaxLength(128)
+                    .HasColumnName("page");
+
                 entity.Property(e => e.Publisherid).HasColumnName("publisherid");
 
                 entity.Property(e => e.Year)
@@ -377,6 +381,10 @@ namespace Citations.Models
                     .HasColumnName("conferencetittle");
 
                 entity.Property(e => e.Country).HasColumnName("country");
+
+                entity.Property(e => e.Page)
+                    .HasMaxLength(128)
+                    .HasColumnName("page");
 
                 entity.Property(e => e.Publisherid).HasColumnName("publisherid");
 

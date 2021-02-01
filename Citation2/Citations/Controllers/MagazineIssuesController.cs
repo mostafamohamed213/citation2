@@ -21,11 +21,11 @@ namespace Citations.Controllers
         // GET: MagazineIssues
         public async Task<IActionResult> Index(int id)
         {
-            Magazine magazine = await _context.Magazines.FirstOrDefaultAsync(a => a.Magazineid == id);
-            ViewBag.magazineName = magazine.Name;
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == id);
+            ViewBag.magazine = magazine;
             ViewBag.magazineId = id;
 
-            var citationContext = _context.MagazineIssues.Where(a=>a.Magazineid==id).Include(m => m.Magazine);
+            var citationContext = _context.MagazineIssues.Where(a => a.Magazineid == id).Include(m => m.Magazine);
             return View(await citationContext.ToListAsync());
         }
         /*CheckIssuenumber*/
@@ -44,14 +44,17 @@ namespace Citations.Controllers
             {
                 return NotFound();
             }
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == magazineIssue.Magazineid);
+            ViewBag.magazine = magazine;
+            ViewBag.magazineId = magazineIssue.Magazineid;
             return View(magazineIssue);
         }
 
         // GET: MagazineIssues/Create
-        public IActionResult Create(int id)
+        public async Task<IActionResult> Create(int id)
         {
-            Magazine magazine = _context.Magazines.FirstOrDefault(a => a.Magazineid == id);
-            ViewBag.magazineName = magazine.Name;
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == id);
+            ViewBag.magazine = magazine;
             ViewBag.magazineId = id;
             return View();
         }
@@ -63,22 +66,22 @@ namespace Citations.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int id,/*[Bind("Issueid,Issuenumber,Magazineid,Publisherid,DateOfPublication")] */ MagazineIssue magazineIssue)
         {
-           
+
             if (ModelState.IsValid)
             {
                 _context.Add(magazineIssue);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index),"MagazineIssues", new
+                return RedirectToAction(nameof(Index), "MagazineIssues", new
                 {
                     id = magazineIssue.Magazineid
-                   
+
                 });
             }
-            Magazine magazine = _context.Magazines.FirstOrDefault(a => a.Magazineid == id);
-            ViewBag.magazineName = magazine.Name;
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == id);
+            ViewBag.magazine = magazine;
             ViewBag.magazineId = id;
             //ViewData["Magazineid"] = new SelectList(_context.Magazines, "Magazineid", "Name", magazineIssue.Magazineid);
-           
+
             return View(magazineIssue);
         }
 
@@ -95,14 +98,10 @@ namespace Citations.Controllers
             {
                 return NotFound();
             }
-            //MagazineIssue magazineIssue1 = _context.MagazineIssues.FirstOrDefault(a => a.Issueid == id);
-            ////ViewBag.magazineName = magazineIssue1.Magazineid;
-            //ViewBag.magazineId = magazineIssue1.Magazineid;
-            ////ViewData["Magazineid"] = new SelectList(_context.Magazines, "Magazineid", "Name", magazineIssue.Magazineid);
             
-            Magazine magazine = _context.Magazines.FirstOrDefault(a => a.Magazineid == magazineIssue.Magazineid);
-            ViewBag.magazineName = magazine.Name;
-            ViewBag.magazineId = magazine.Magazineid;
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == magazineIssue.Magazineid);
+            ViewBag.magazine = magazine;
+            ViewBag.magazineId = magazineIssue.Magazineid;
 
             return View(magazineIssue);
         }
@@ -143,13 +142,10 @@ namespace Citations.Controllers
 
                 });
             }
-            //MagazineIssue magazineIssue1 = _context.MagazineIssues.FirstOrDefault(a => a.Issueid == id);
-            ////ViewBag.magazineName = magazineIssue1.Magazineid;
-            //ViewBag.magazineId = magazineIssue1.Magazineid;
-            ////ViewData["Magazineid"] = new SelectList(_context.Magazines, "Magazineid", "Isbn", magazineIssue.Magazineid);
-            Magazine magazine = _context.Magazines.FirstOrDefault(a => a.Magazineid == magazineIssue.Magazineid);
-            ViewBag.magazineName = magazine.Name;
-            ViewBag.magazineId = magazine.Magazineid;
+            
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == magazineIssue.Magazineid);
+            ViewBag.magazine = magazine;
+            ViewBag.magazineId = magazineIssue.Magazineid;
 
             return View(magazineIssue);
         }
@@ -184,9 +180,14 @@ namespace Citations.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
-        public JsonResult CheckIssuenumber(int Issuenumber, int Magazineid,int? Issueid)
+        public JsonResult CheckIssuenumber(string Issuenumber, int Magazineid,int? Issueid)
         {
-            if(Issueid==null)
+            if (Issuenumber == null)
+            {
+                return Json(data: "الرجاء ادخال اسم صحيح");
+            }
+
+            if (Issueid==null)
             {
                 return Json(!_context.MagazineIssues.Any(e => e.Issuenumber == Issuenumber && e.Magazineid == Magazineid));
                 

@@ -9,7 +9,8 @@
 
 <div>
     <h4><span> العدد</span> @Model.Issuenumber</h4>
-    <h4>@Model.Magazine.Name</h4>
+    <h1>@ViewBag.magazine.Name</h1>
+    <h2>@ViewBag.magazine.Institution.Name</h2>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -41,5 +42,5 @@
 <div>
 
     <a asp-action="Index" asp-route-id="@Model.Magazineid">العودة للأعداد</a>
-    
+
 </div>

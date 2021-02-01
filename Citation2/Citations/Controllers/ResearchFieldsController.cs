@@ -53,7 +53,7 @@ namespace Citations.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Fieldid,Name")] ResearchField researchField)
+        public async Task<IActionResult> Create(/*[Bind("Fieldid,Name")]*/ ResearchField researchField)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace Citations.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Fieldid,Name,Active")] ResearchField researchField)
+        public async Task<IActionResult> Edit(int id, /*[Bind("Fieldid,Name,Active")]*/ ResearchField researchField)
         {
             if (id != researchField.Fieldid)
             {
@@ -144,8 +144,35 @@ namespace Citations.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        
+         public JsonResult CheckEnField(string NameEn, int? Fieldid)
+         {
+            var name = NameEn.Trim();
+            if (Fieldid == null)
+            {
+                return Json(!_context.ResearchFields.Any(e => e.NameEn == name));
+
+            }
+            else
+            {
+
+                if (_context.ResearchFields.Any(e => e.NameEn == name && e.Fieldid == Fieldid))
+                {
+                    return Json(true);
+                }
+                else if (_context.ResearchFields.Any(e => e.NameEn == name))
+                {
+                    return Json(false);
+                }
+                return Json(true);
+            }
+        }
         public JsonResult CheckField(string Name, int? Fieldid)
         {
+            if (Name == null)
+            {
+                return Json(data: "الرجاء ادخال اسم صحيح");
+            }
             var name = Name.Trim();
             if (Fieldid == null)
             {
@@ -164,13 +191,9 @@ namespace Citations.Controllers
                     return Json(false);
                 }
                 return Json(true);
-
-
             }
-
-
-
         }
+
 
         private bool ResearchFieldExists(int id)
         {

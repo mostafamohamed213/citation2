@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -16,6 +18,10 @@ namespace Citations.Models
         }
 
         public int Countryid { get; set; }
+        [Required(ErrorMessage = "هذا الحقل مطلوب")]
+        [Remote("checkname", "Countries", AdditionalFields = "Countryid",
+        ErrorMessage = "هذا الإسم موجود من قبل")]
+        [Display(Name = "البلد")]
         public string Name { get; set; }
         public bool Active { get; set; }
 

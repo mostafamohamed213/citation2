@@ -13,7 +13,6 @@ namespace Citations.Models
         public int? Bookid { get; set; }
         public int? Conferenceid { get; set; }
         public int? TypeSourceid { get; set; }
-        public string Page { get; set; }
 
         public virtual Article Article { get; set; }
         public virtual Article Articleref { get; set; }

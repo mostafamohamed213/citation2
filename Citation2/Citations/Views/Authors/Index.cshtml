@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+ 
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -46,7 +46,7 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Authorid" class="fa fa-edit" title="Edit"></a> |
                     <a asp-action="Details" asp-route-id="@item.Authorid" class="fa fa-eye" title="Details"></a> |
-                    <a href="javascript:void(0)" class="fa fa-trash" title="Delete" onclick="confirmdelete(@item.Authorid)"></a>|
+                    @*<a href="javascript:void(0)" class="fa fa-trash" title="Delete" onclick="confirmdelete(@item.Authorid)"></a>|*@
                     <a asp-action="Index" asp-controller="AuthorResearchFields" asp-route-id="@item.Authorid"  class="fa fa-book" title="researchfields"></a>
                 </td>
 

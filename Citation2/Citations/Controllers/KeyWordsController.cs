@@ -42,6 +42,40 @@ namespace Citations.Controllers
             return View(keyWord);
         }
 
+        public IActionResult checkname(String KeyWord1, int? KeyWordid)
+        {
+            if (KeyWord1 == null)
+            {
+                return Json(data: "الرجاء ادخال اسم صحيح");
+            }
+
+            if (KeyWordid == null)
+            {
+                var name = KeyWord1.Trim();
+                if (_context.KeyWords.FirstOrDefault(i => i.KeyWord1 == name) == null)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            else
+            {
+                var name = KeyWord1.Trim();
+                if (_context.KeyWords.FirstOrDefault(i => i.KeyWordid != KeyWordid && i.KeyWord1 == name) == null)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+
+            }
+        }
+
         // GET: KeyWords/Create
         public IActionResult Create()
         {

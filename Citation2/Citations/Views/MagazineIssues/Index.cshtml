@@ -5,7 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>@ViewBag.magazineName</h1>
+<h1>@ViewBag.magazine.Name</h1>
+<h2>@ViewBag.magazine.Institution.Name</h2>
 
 <p>
     <a asp-action="Create" asp-route-id="@ViewBag.magazineId">إضافة عدد</a>
@@ -15,35 +16,36 @@
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Issuenumber)
-            </th>      
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Magazine)
-            </th>   
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Issuenumber)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.DateOfPublication)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Magazine.Name)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Publisher.Name)
-            </td>*@
-        <td>
-            <a asp-action="Details" asp-route-id="@item.Issueid">تفاصيل</a> |
-            <a asp-action="Edit" asp-route-id="@item.Issueid">تعديل</a> |
-            <a asp-action="Index" asp-controller="IssueOfIssues" asp-route-id="@item.Issueid">عرض الإصدارات</a>
-        </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Issuenumber)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.DateOfPublication)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Magazine.Name)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Publisher.Name)
+                    </td>*@
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Issueid" class="fa fa-eye" title="تفاصيل"></a> |
+                    <a asp-action="Edit" asp-route-id="@item.Issueid" class="fa fa-edit" title="تعديل"></a> |
+                    <a asp-action="Index" asp-controller="IssueOfIssues" asp-route-id="@item.Issueid">عرض الإصدارات</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 <a asp-action="Index" asp-controller="Magazines">العودة للمجلات</a>

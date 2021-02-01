@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 #nullable disable
 
@@ -13,6 +15,8 @@ namespace Citations.Models
         }
 
         public int TypePublisherid { get; set; }
+        [Required(ErrorMessage = "هذا الحقب  مطلوب", AllowEmptyStrings = false), Display(Name = "نوع الناشر"), Remote("typepublisherExistsremote", "RemoteValidation", AdditionalFields = "TypePublisherid")]
+
         public string TypeName { get; set; }
         public bool Active { get; set; }
 

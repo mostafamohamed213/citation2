@@ -21,8 +21,10 @@ namespace Citations.Controllers
         // GET: IssueOfIssues
         public async Task<IActionResult> Index(int id)
         {
-            var citationContext = _context.IssueOfIssues.Where(a=>a.MagazineIssueId==id).Include(i => i.MagazineIssue);
+            var citationContext = _context.IssueOfIssues.Where(a => a.MagazineIssueId == id).Include(i => i.MagazineIssue);
             MagazineIssue magazineIssue = await _context.MagazineIssues.FirstOrDefaultAsync(a => a.Issueid == id);
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == magazineIssue.Magazineid);
+            ViewBag.magazine = magazine;
             ViewBag.Issuenumber = magazineIssue.Issuenumber;
             ViewBag.magazineid = magazineIssue.Magazineid;
             ViewBag.Issueid = id;
@@ -45,6 +47,8 @@ namespace Citations.Controllers
                 return NotFound();
             }
             MagazineIssue magazineIssue = await _context.MagazineIssues.FirstOrDefaultAsync(a => a.Issueid == issueOfIssue.MagazineIssueId);
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == magazineIssue.Magazineid);
+            ViewBag.magazine = magazine;
             ViewBag.Issuenumber = magazineIssue.Issuenumber;
             ViewBag.Issueid = issueOfIssue.MagazineIssueId;
 
@@ -55,6 +59,8 @@ namespace Citations.Controllers
         public async Task<IActionResult> Create(int id)
         {
             MagazineIssue magazineIssue = await _context.MagazineIssues.FirstOrDefaultAsync(a => a.Issueid == id);
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == magazineIssue.Magazineid);
+            ViewBag.magazine = magazine;
             ViewBag.Issuenumber = magazineIssue.Issuenumber;
             ViewBag.Issueid = id;
             return View();
@@ -78,6 +84,8 @@ namespace Citations.Controllers
                 });
             }
             MagazineIssue magazineIssue = await _context.MagazineIssues.FirstOrDefaultAsync(a => a.Issueid == id);
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == magazineIssue.Magazineid);
+            ViewBag.magazine = magazine;
             ViewBag.Issuenumber = magazineIssue.Issuenumber;
             ViewBag.Issueid = id;
             return View(issueOfIssue);
@@ -97,8 +105,10 @@ namespace Citations.Controllers
                 return NotFound();
             }
             MagazineIssue magazineIssue = await _context.MagazineIssues.FirstOrDefaultAsync(a => a.Issueid == issueOfIssue.MagazineIssueId);
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == magazineIssue.Magazineid);
+            ViewBag.magazine = magazine;
             ViewBag.Issuenumber = magazineIssue.Issuenumber;
-            ViewBag.Issueid = issueOfIssue.MagazineIssueId; 
+            ViewBag.Issueid = issueOfIssue.MagazineIssueId;
             return View(issueOfIssue);
         }
 
@@ -139,8 +149,10 @@ namespace Citations.Controllers
                 });
             }
             MagazineIssue magazineIssue = await _context.MagazineIssues.FirstOrDefaultAsync(a => a.Issueid == issueOfIssue.MagazineIssueId);
+            Magazine magazine = await _context.Magazines.Include(a => a.Institution).FirstOrDefaultAsync(a => a.Magazineid == magazineIssue.Magazineid);
+            ViewBag.magazine = magazine;
             ViewBag.Issuenumber = magazineIssue.Issuenumber;
-            ViewBag.Issueid = issueOfIssue.MagazineIssueId; 
+            ViewBag.Issueid = issueOfIssue.MagazineIssueId;
             return View(issueOfIssue);
         }
 
@@ -176,6 +188,11 @@ namespace Citations.Controllers
         [HttpPost]
         public JsonResult CheckIssueNum(string IssuenumberOfIssue, int MagazineIssueId, int? IssueOfIssueid)
         {
+            if (IssuenumberOfIssue == null)
+            {
+                return Json(data: "الرجاء ادخال اسم صحيح");
+            }
+
             if (IssueOfIssueid == null)
             {
                 string n = IssuenumberOfIssue.Trim();

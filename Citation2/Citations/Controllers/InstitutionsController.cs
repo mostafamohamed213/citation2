@@ -22,6 +22,39 @@ namespace Citations.Controllers
             webHostEnvironment = hostEnvironment;
         }
 
+        public IActionResult checkname(String Name, int? Institutionid)
+        {
+            if (Name == null)
+            {
+                return Json(data: "الرجاء ادخال اسم صحيح");
+            }
+            if (Institutionid == null)
+            {
+                var name = Name.Trim();
+                if (_context.Institutions.FirstOrDefault(i => i.Name == name) == null)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            else
+            {
+                var name = Name.Trim();
+                if (_context.Institutions.FirstOrDefault(i => i.Institutionid != Institutionid && i.Name == name) == null)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+
+            }
+        }
+
 
         // GET: Institutions
         public async Task<IActionResult> Index()

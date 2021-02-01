@@ -20,6 +20,7 @@ namespace Citations.Controllers
             _context = context;
         }
 
+        
         // GET: Articles
         public async Task<IActionResult> Index()
         {
@@ -29,6 +30,11 @@ namespace Citations.Controllers
 
         public IActionResult checkname(String Articletittle, int? Articleid)
         {
+            if (Articletittle == null)
+            {
+                return Json(data: "الرجاء ادخال اسم صحيح");
+            }
+
             if (Articleid == null)
             {
                 var Articletittle1 = Articletittle.Trim();
@@ -56,6 +62,40 @@ namespace Citations.Controllers
             }
         }
 
+        public IActionResult checkenname(String ArticletittleEn, int? Articleid)
+        {
+            if (ArticletittleEn == null)
+            {
+                return Json(data: "الرجاء ادخال اسم صحيح");
+            }
+
+            if (Articleid == null)
+            {
+                var Articletittle1 = ArticletittleEn.Trim();
+                if (_context.Articles.FirstOrDefault(i => i.ArticletittleEn == Articletittle1) == null)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+            }
+            else
+            {
+                var Articletittle1 = ArticletittleEn.Trim();
+                if (_context.Articles.FirstOrDefault(i => i.Articleid != Articleid && i.ArticletittleEn == Articletittle1) == null)
+                {
+                    return Json(true);
+                }
+                else
+                {
+                    return Json(false);
+                }
+
+            }
+        }
+
         // GET: Articles/Details/5
         public IActionResult Details(int? id)
         {
@@ -64,7 +104,7 @@ namespace Citations.Controllers
                 return NotFound();
             }
 
-            var article = _context.Articles.Include(p => p.ArticleAuthores).ThenInclude(p=>p.Author).Include(p => p.ArticlesKeywords).Include(p => p.ArticleIssueNavigation).ThenInclude(p => p.MagazineIssue).ThenInclude(p => p.Magazine).Where(a => a.Articleid == id).Single();
+            var article = _context.Articles.Include(p => p.ArticleReferenceArticles).ThenInclude(p=>p.Articleref).Include(p => p.ArticleReferenceArticles).ThenInclude(p => p.Book).Include(p => p.ArticleReferenceArticles).ThenInclude(p => p.Conference).Include(p => p.ArticleAuthores).ThenInclude(p=>p.Author).Include(p => p.ArticlesKeywords).Include(p => p.ArticleIssueNavigation).ThenInclude(p => p.MagazineIssue).ThenInclude(p => p.Magazine).Where(a => a.Articleid == id).Single();
 
             if (article == null)
             {
@@ -125,7 +165,7 @@ namespace Citations.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveArticle(string keyw,[Bind("Articleid,Articletittle,ArticletittleEn,ScannedArticlePdf,BriefQuote,BriefQuoteEn,NumberOfCitations,NumberOfReferences,ArticleIssue,Active")] Article article, IFormFile afiles)
+        public IActionResult SaveArticle(string[] ResarchFields, string[] newenResarchFields, string[] newarResarchFields, [Bind("Articleid,Articletittle,ArticletittleEn,ScannedArticlePdf,BriefQuote,BriefQuoteEn,NumberOfCitations,NumberOfReferences,ArticleIssue,Active,Page")] Article article, IFormFile afiles)
         {
             if (ModelState.IsValid)
             {
@@ -159,21 +199,50 @@ namespace Citations.Controllers
                 _context.Add(article);
                 _context.SaveChanges();
 
-                if (keyw != null)
-                {
-                    string[] str_arr = keyw.Split(',').ToArray();
-                    int[] int_arr = Array.ConvertAll(str_arr, Int32.Parse);
 
-                    article.ArticlesKeywords = new List<ArticlesKeyword>();
-                    foreach (var risk in int_arr)
+
+                List<KeyWord> newresfields = new List<KeyWord>();
+                List<ArticlesKeyword> autresfield = new List<ArticlesKeyword>();
+                for (int i = 0; i < newarResarchFields.Length; i++)
+                {
+                    var exresfild = _context.KeyWords.FirstOrDefault(rf => rf.KeyWord1.Trim().ToLower() == newarResarchFields[i].Trim().ToLower());
+                    if (exresfild == null)
                     {
-                        var risktoadd = _context.KeyWords.Find(risk);
-                        _context.ArticlesKeywords.Add(new ArticlesKeyword { KeyWordid = risktoadd.KeyWordid, Articleid = article.Articleid });
-                        _context.SaveChanges();
+
+                        newresfields.Add(new KeyWord { KeyWord1 = newarResarchFields[i], KeyWordEn = newenResarchFields[i], Active = true });
+
+
+                    }
+                    else
+                    {
+                        autresfield.Add(new ArticlesKeyword() { Articleid = article.Articleid,KeyWordid = exresfild.KeyWordid });
                     }
                 }
 
+                _context.KeyWords.AddRange(newresfields);
+                _context.SaveChanges();
 
+                var allresearchfields = _context.KeyWords;
+                List<string> ResarchFieldslst = ResarchFields.ToList();
+                for (int i = 0; i < newarResarchFields.Length; i++)
+                {
+                    string resfieldid = allresearchfields.FirstOrDefault(rf => rf.KeyWord1.Trim() == newarResarchFields[i].Trim()).KeyWordid.ToString();
+                    ResarchFieldslst.Add(resfieldid);
+                }
+
+                foreach (var item in ResarchFieldslst)
+                {
+                    autresfield.Add(new ArticlesKeyword() { Articleid = article.Articleid, KeyWordid = int.Parse(item) });
+                }
+
+                autresfield = autresfield.GroupBy(i => i.KeyWordid).Select(i => i.FirstOrDefault()).ToList();
+
+
+
+
+                _context.ArticlesKeywords.AddRange(autresfield);
+
+                _context.SaveChanges();
 
                 foreach (var item in asd)
                 {
@@ -186,7 +255,8 @@ namespace Citations.Controllers
                 }
                 return Json(new
                 {
-                    success = true
+                    success = true,
+                    id=article.Articleid
                 });
 
 
@@ -231,12 +301,17 @@ namespace Citations.Controllers
 
 
        
-      public IActionResult SaveResourceNewArticle(int articleid,[Bind("Articletittle,ArticletittleEn,ScannedArticlePdf,BriefQuote,BriefQuoteEn,NumberOfCitations,NumberOfReferences,ArticleIssue,Active")] Article article,string page)
+      public IActionResult SaveResourceNewArticle(int articleid,[Bind("Articletittle,ArticletittleEn,ScannedArticlePdf,BriefQuote,BriefQuoteEn,NumberOfCitations,NumberOfReferences,ArticleIssue,Active,Page")] Article article)
         {
           
            
             if (TryValidateModel(article))
             {
+                var existarticle = _context.Articles.FirstOrDefault(w=>w.Articletittle==article.Articletittle.Trim());
+                if(existarticle!=null)
+                {
+                    return RedirectToAction("SaveResourceExistArticle", new { articleid= articleid, articlerefid= existarticle.Articleid});
+                }
                 article.NumberOfCitations = 1;
                 _context.Add(article);
                 _context.SaveChanges();
@@ -254,7 +329,7 @@ namespace Citations.Controllers
                 ArticleReference articleReference = new ArticleReference();
                 articleReference.Articleid = articleid;
                 articleReference.Articlerefid = article.Articleid;
-                articleReference.Page = page;
+               
                 articleReference.TypeSourceid = 1;
 
                 _context.Add(articleReference);
@@ -285,12 +360,23 @@ namespace Citations.Controllers
 
         }
 
-        public IActionResult SaveResourceExistArticle(int articleid,int articlerefid,string page)
+        public IActionResult SaveResourceExistArticle(int articleid,int articlerefid)
         {
+            var existarticleReference = _context.ArticleReferences.FirstOrDefault(a=>a.Articleid==articleid&&a.Articlerefid==articlerefid);
+            if(existarticleReference!=null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    responseText = "هذا المرجع موجود من قبل",
+                    type = "warning"
+
+                });
+            }
             ArticleReference articleReference = new ArticleReference();
             articleReference.Articleid = articleid;
             articleReference.Articlerefid = articlerefid;
-            articleReference.Page = page;
+           
             articleReference.TypeSourceid = 1;
 
             _context.Add(articleReference);
@@ -316,12 +402,19 @@ namespace Citations.Controllers
         }
 
 
-        public IActionResult SaveResourceNewBook(int articleid, [Bind("Bookid,Booktittle,Year,Country,Publisherid,Active")] Book book, string page)
+        public IActionResult SaveResourceNewBook(int articleid, [Bind("Bookid,Booktittle,Year,Country,Publisherid,Active,Page")] Book book)
         {
 
 
             if (TryValidateModel(book))
             {
+                var existbook = _context.Books.FirstOrDefault(w => w.Booktittle == book.Booktittle.Trim());
+                if (existbook != null)
+                {
+                 
+                    return RedirectToAction("SaveResourceExistBook", new { articleid = articleid, bookrefid = existbook.Bookid });
+                }
+
                 _context.Add(book);
                 _context.SaveChanges();
 
@@ -340,7 +433,7 @@ namespace Citations.Controllers
                 ArticleReference articleReference = new ArticleReference();
                 articleReference.Articleid = articleid;
                 articleReference.Bookid=book.Bookid;
-                articleReference.Page = page;
+             
                 articleReference.TypeSourceid = 2;
 
                 _context.Add(articleReference);
@@ -371,12 +464,24 @@ namespace Citations.Controllers
 
         }
 
-        public IActionResult SaveResourceExistBook(int articleid, int bookrefid, string page)
+        public IActionResult SaveResourceExistBook(int articleid, int bookrefid)
         {
+            var existarticleReference = _context.ArticleReferences.FirstOrDefault(a => a.Articleid == articleid && a.Bookid == bookrefid);
+            if (existarticleReference != null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    responseText = "هذا المرجع موجود من قبل",
+                    type = "warning"
+
+                });
+            }
+
             ArticleReference articleReference = new ArticleReference();
             articleReference.Articleid = articleid;
             articleReference.Bookid = bookrefid;
-            articleReference.Page = page;
+          
             articleReference.TypeSourceid = 2;
 
             _context.Add(articleReference);
@@ -396,12 +501,19 @@ namespace Citations.Controllers
 
         }
 
-        public IActionResult SaveResourceNewConference(int articleid, [Bind("Conferenceid,Conferencetittle,Year,ConferencePublicationName,Country,Publisherid,Active")] ConferenceProceeding conferenceProceeding, string page)
+        public IActionResult SaveResourceNewConference(int articleid, [Bind("Conferenceid,Conferencetittle,Year,ConferencePublicationName,Country,Publisherid,Active,Page")] ConferenceProceeding conferenceProceeding)
         {
 
 
             if (TryValidateModel(conferenceProceeding))
             {
+                var existconference= _context.ConferenceProceedings.FirstOrDefault(w => w.Conferencetittle == conferenceProceeding.Conferencetittle.Trim());
+                if (existconference != null)
+                {
+                
+                    return RedirectToAction("SaveResourceExistConference", new { articleid = articleid, conferencerefid = existconference.Conferenceid });
+                }
+
                 _context.Add(conferenceProceeding);
                 _context.SaveChanges();
 
@@ -421,7 +533,7 @@ namespace Citations.Controllers
                 ArticleReference articleReference = new ArticleReference();
                 articleReference.Articleid = articleid;
                 articleReference.Conferenceid = conferenceProceeding.Conferenceid;
-                articleReference.Page = page;
+            
                 articleReference.TypeSourceid = 3;
 
                 _context.Add(articleReference);
@@ -452,12 +564,23 @@ namespace Citations.Controllers
 
         }
 
-        public IActionResult SaveResourceExistConference(int articleid, int conferencerefid, string page)
+        public IActionResult SaveResourceExistConference(int articleid, int conferencerefid)
         {
+            var existarticleReference = _context.ArticleReferences.FirstOrDefault(a => a.Articleid == articleid && a.Conferenceid == conferencerefid);
+            if (existarticleReference != null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    responseText = "هذا المرجع موجود من قبل",
+                    type = "warning"
+
+                });
+            }
             ArticleReference articleReference = new ArticleReference();
             articleReference.Articleid = articleid;
             articleReference.Conferenceid= conferencerefid;
-            articleReference.Page = page;
+          
             articleReference.TypeSourceid = 3;
 
             _context.Add(articleReference);
@@ -529,7 +652,7 @@ namespace Citations.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
      
-        public async Task<IActionResult> Edit(int id, string keyw, [Bind("Articleid,Articletittle,ArticletittleEn,ScannedArticlePdf,BriefQuote,BriefQuoteEn,NumberOfCitations,NumberOfReferences,ArticleIssue,Active")] Article article, IFormFile afiles)
+        public async Task<IActionResult> Edit(int id, string[] ResarchFields, string[] newenResarchFields, string[] newarResarchFields, [Bind("Articleid,Articletittle,ArticletittleEn,ScannedArticlePdf,BriefQuote,BriefQuoteEn,NumberOfCitations,NumberOfReferences,ArticleIssue,Active,Page")] Article article, IFormFile afiles)
         {
             if (id != article.Articleid)
             {
@@ -576,19 +699,53 @@ namespace Citations.Controllers
                     var articlekeywords = _context.ArticlesKeywords.Where(a => a.Articleid == article.Articleid);
                     _context.ArticlesKeywords.RemoveRange(articlekeywords);
                     _context.SaveChanges();
-                    if (keyw != null)
-                    {
-                        string[] str_arr = keyw.Split(',').ToArray();
-                        int[] int_arr = Array.ConvertAll(str_arr, Int32.Parse);
 
-                        article.ArticlesKeywords = new List<ArticlesKeyword>();
-                        foreach (var risk in int_arr)
+
+
+                    List<KeyWord> newresfields = new List<KeyWord>();
+                    List<ArticlesKeyword> autresfield = new List<ArticlesKeyword>();
+                    for (int i = 0; i < newarResarchFields.Length; i++)
+                    {
+                        var exresfild = _context.KeyWords.FirstOrDefault(rf => rf.KeyWord1.Trim().ToLower() == newarResarchFields[i].Trim().ToLower());
+                        if (exresfild == null)
                         {
-                            var risktoadd = _context.KeyWords.Find(risk);
-                            _context.ArticlesKeywords.Add(new ArticlesKeyword { KeyWordid = risktoadd.KeyWordid, Articleid = article.Articleid });
-                            _context.SaveChanges();
+
+                            newresfields.Add(new KeyWord { KeyWord1 = newarResarchFields[i], KeyWordEn = newenResarchFields[i], Active = true });
+
+
+                        }
+                        else
+                        {
+                            autresfield.Add(new ArticlesKeyword() { Articleid = article.Articleid, KeyWordid = exresfild.KeyWordid });
                         }
                     }
+
+                    _context.KeyWords.AddRange(newresfields);
+                    _context.SaveChanges();
+
+                    var allresearchfields = _context.KeyWords;
+                    List<string> ResarchFieldslst = ResarchFields.ToList();
+                    for (int i = 0; i < newarResarchFields.Length; i++)
+                    {
+                        string resfieldid = allresearchfields.FirstOrDefault(rf => rf.KeyWord1.Trim() == newarResarchFields[i].Trim()).KeyWordid.ToString();
+                        ResarchFieldslst.Add(resfieldid);
+                    }
+
+                    foreach (var item in ResarchFieldslst)
+                    {
+                        autresfield.Add(new ArticlesKeyword() { Articleid = article.Articleid, KeyWordid = int.Parse(item) });
+                    }
+
+                    autresfield = autresfield.GroupBy(i => i.KeyWordid).Select(i => i.FirstOrDefault()).ToList();
+
+
+
+
+                    _context.ArticlesKeywords.AddRange(autresfield);
+
+                    _context.SaveChanges();
+
+
 
                     var articleauthor = _context.ArticleAuthores.Where(a => a.Articleid == article.Articleid);
                     _context.ArticleAuthores.RemoveRange(articleauthor);
@@ -615,7 +772,11 @@ namespace Citations.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Json(new
+                {
+                    success = true,
+                    id = article.Articleid
+                });
             }
             ViewData["ArticleIssue"] = new SelectList(_context.IssueOfIssues, "IssueOfIssueid", "IssuenumberOfIssue", article.ArticleIssue);
             return View(article);

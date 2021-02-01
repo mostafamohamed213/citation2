@@ -70,11 +70,24 @@ namespace Citations.Controllers
         // GET: Magazines/Create
         public IActionResult Create()
         {
-            //IEnumerable<ResearchField> Fields = await _context.ResearchFields.Where(a=>a.Active==true).ToListAsync();
-            //ViewBag.ResearchFields = Fields;
-            ViewBag.Fieldid = new MultiSelectList(_context.ResearchFields.Where(a => a.Active == true), "Fieldid", "Name");
+            var Fields = _context.ResearchFields.Where(a => a.Active == true).Select(s => new
+            {
+                Fieldid = s.Fieldid,
+                Name = string.Format("{0} - {1}", s.Name, s.NameEn)
+            }).ToList();
+            var publisher = _context.Publishers.Include(a=>a.Institution).Where(a => a.Active == true && a.Institutionid!=null).Select(s => new
+            {
+                Publisherid = s.Publisherid,
+                Name = s.Institution.Name
+            }).ToList();
+            publisher.AddRange(_context.Publishers.Include(a => a.Institution).Where(a => a.Active == true && a.Institutionid == null).Select(s => new
+            {
+                Publisherid = s.Publisherid,
+                Name = s.Name
+            }).ToList());
+            ViewBag.Fieldid = new MultiSelectList(Fields, "Fieldid", "Name");
             ViewData["Institutionid"] = new SelectList(_context.Institutions, "Institutionid", "Name");
-            ViewData["Publisherid"] = new SelectList(_context.Publishers, "Publisherid", "Name");
+            ViewData["Publisherid"] = new SelectList(publisher, "Publisherid", "Name");
             return View();
         }
 
@@ -83,7 +96,7 @@ namespace Citations.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(/*[Bind("Name,Isbn,ImpactFactor,ImmediateCoefficient,AppropriateValue,NumberOfCitations,Institutionid,ResearchFields")]*/ Magazine magazine/*, IEnumerable<int> Field*/)
+        public async Task<IActionResult> Create(/*[Bind("Name,Isbn,ImpactFactor,ImmediateCoefficient,AppropriateValue,NumberOfCitations,Institutionid,ResearchFields")]*/ Magazine magazine,/* string[] ResarchFields*/ string[] newenResarchFields, string[] newarResarchFields)
         {
             if (ModelState.IsValid)
             {
@@ -96,14 +109,67 @@ namespace Citations.Controllers
                     {
                         var magazineResearchField = new MagazineResearchField() { Fieldid = item, Magazineid = magazine.Magazineid };
                         _context.Add(magazineResearchField);
+                    }
+                    _context.SaveChanges();
+                }
+                if (newarResarchFields != null)
+                {
+                    if(newenResarchFields.Length==0&& newenResarchFields.Contains(""))
+                    {
+                        for (int i = 0; i < newarResarchFields.Length; i++)
+                        {
+                            if (!_context.ResearchFields.Any(e => e.Name.Trim().ToLower() == newarResarchFields[i].Trim().ToLower() /*&& e.NameEn==newenResarchFields[i]*/))
+                            {
+                                var researchField = new ResearchField() { Name = newarResarchFields[i].Trim().ToLower(), NameEn = newenResarchFields[i].Trim().ToLower(), Active = true };
+                                _context.ResearchFields.Add(researchField);
+                                _context.SaveChanges();
+                                var magazineResearchField = new MagazineResearchField() { Fieldid = researchField.Fieldid, Magazineid = magazine.Magazineid };
+                                _context.Add(magazineResearchField);
+                                _context.SaveChanges();
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < newarResarchFields.Length; i++)
+                        {
+                            if (!_context.ResearchFields.Any(e => e.Name.Trim().ToLower() == newarResarchFields[i].Trim().ToLower() /*&& e.NameEn==newenResarchFields[i]*/))
+                            {
+                                var researchField = new ResearchField() { Name = newarResarchFields[i].Trim().ToLower(), Active = true };
+                                _context.ResearchFields.Add(researchField);
+                                _context.SaveChanges();
+                                var magazineResearchField = new MagazineResearchField() { Fieldid = researchField.Fieldid, Magazineid = magazine.Magazineid };
+                                _context.Add(magazineResearchField);
+                                _context.SaveChanges();
+
+                            }
+                        }
 
                     }
-                    await _context.SaveChangesAsync();
                 }
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Institutionid"] = new SelectList(_context.Institutions, "Institutionid", "Name", magazine.Institutionid);
-            ViewData["Publisherid"] = new SelectList(_context.Publishers, "Publisherid", "Name", magazine.Publisherid);
+            var Fields = _context.ResearchFields.Where(a => a.Active == true).Select(s => new
+            {
+                Fieldid = s.Fieldid,
+                Name = string.Format("{0} - {1}", s.Name, s.NameEn)
+            }).ToList();
+            var publisher = _context.Publishers.Include(a => a.Institution).Where(a => a.Active == true && a.Institutionid != null).Select(s => new
+            {
+                Publisherid = s.Publisherid,
+                Name = s.Institution.Name
+            }).ToList();
+            publisher.AddRange(_context.Publishers.Include(a => a.Institution).Where(a => a.Active == true && a.Institutionid == null).Select(s => new
+            {
+                Publisherid = s.Publisherid,
+                Name = s.Name
+            }).ToList());
+            ViewData["Publisherid"] = new SelectList(publisher, "Publisherid", "Name");
+            ViewBag.Fieldid = new MultiSelectList(Fields, "Fieldid", "Name");
+            ViewData["Institutionid"] = new SelectList(_context.Institutions, "Institutionid", "Name");
+          
             return View(magazine);
         }
 
@@ -123,9 +189,27 @@ namespace Citations.Controllers
             IEnumerable<int> Fields = await _context.MagazineResearchFields.Where(a => a.Magazineid == id).Select(a => a.Field.Fieldid).ToListAsync();
             //ViewBag.ResearchFields = Fields;
             magazine.ResearchFields = Fields.ToArray();
-            ViewBag.Fieldid = new MultiSelectList(_context.ResearchFields.Where(a => a.Active == true), "Fieldid", "Name");
+            var publisher = _context.Publishers.Include(a => a.Institution).Where(a => a.Active == true && a.Institutionid != null).Select(s => new
+            {
+                Publisherid = s.Publisherid,
+                Name = s.Institution.Name
+            }).ToList();
+            publisher.AddRange(_context.Publishers.Include(a => a.Institution).Where(a => a.Active == true && a.Institutionid == null).Select(s => new
+            {
+                Publisherid = s.Publisherid,
+                Name = s.Name
+            }).ToList());
+            ViewData["Publisherid"] = new SelectList(publisher, "Publisherid", "Name");
+
+            var rFields = _context.ResearchFields.Where(a => a.Active == true).Select(s => new
+            {
+                Fieldid = s.Fieldid,
+                Name = string.Format("{0} - {1}", s.Name, s.NameEn)
+            }).ToList();
+            ViewBag.Fieldid = new MultiSelectList(rFields, "Fieldid", "Name");
+            //ViewBag.Fieldid = new MultiSelectList(_context.ResearchFields.Where(a => a.Active == true), "Fieldid", "Name");
             ViewData["Institutionid"] = new SelectList(_context.Institutions, "Institutionid", "Name", magazine.Institutionid);
-            ViewData["Publisherid"] = new SelectList(_context.Publishers, "Publisherid", "Name", magazine.Publisherid);
+         
             return View(magazine);
         }
 
@@ -177,8 +261,29 @@ namespace Citations.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            IEnumerable<int> Fields = await _context.MagazineResearchFields.Where(a => a.Magazineid == id).Select(a => a.Field.Fieldid).ToListAsync();
+            //ViewBag.ResearchFields = Fields;
+            magazine.ResearchFields = Fields.ToArray();
+            var publisher = _context.Publishers.Include(a => a.Institution).Where(a => a.Active == true && a.Institutionid != null).Select(s => new
+            {
+                Publisherid = s.Publisherid,
+                Name = s.Institution.Name
+            }).ToList();
+            publisher.AddRange(_context.Publishers.Include(a => a.Institution).Where(a => a.Active == true && a.Institutionid == null).Select(s => new
+            {
+                Publisherid = s.Publisherid,
+                Name = s.Name
+            }).ToList());
+            ViewData["Publisherid"] = new SelectList(publisher, "Publisherid", "Name");
+
+            var rFields = _context.ResearchFields.Where(a => a.Active == true).Select(s => new
+            {
+                Fieldid = s.Fieldid,
+                Name = string.Format("{0} - {1}", s.Name, s.NameEn)
+            }).ToList();
+            ViewBag.Fieldid = new MultiSelectList(rFields, "Fieldid", "Name");
+            //ViewBag.Fieldid = new MultiSelectList(_context.ResearchFields.Where(a => a.Active == true), "Fieldid", "Name");
             ViewData["Institutionid"] = new SelectList(_context.Institutions, "Institutionid", "Name", magazine.Institutionid);
-            ViewData["Publisherid"] = new SelectList(_context.Publishers, "Publisherid", "Name", magazine.Publisherid);
             return View(magazine);
         }
 
@@ -237,6 +342,10 @@ namespace Citations.Controllers
         }
         public JsonResult CheckName(string Name,int? Magazineid)
         {
+            if (Name == null)
+            {
+                return Json(data: "الرجاء ادخال اسم صحيح");
+            }
             var name = Name.Trim();
             if (Magazineid == null)
             {
