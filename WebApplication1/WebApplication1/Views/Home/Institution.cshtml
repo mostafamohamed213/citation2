@@ -1,0 +1,328 @@
+﻿
+<style>
+    body {
+        margin-top: auto;
+        background-color: #f1f1f1;
+    }
+
+    .border {
+        border-bottom: 1px solid #F1F1F1;
+        margin-bottom: 10px;
+    }
+
+    .main-secction {
+        box-shadow: 10px 10px 10px;
+    }
+
+    .image-section {
+        padding: 0px;
+    }
+
+        .image-section img {
+            width: 100%;
+            height: 250px;
+            position: relative;
+        }
+
+    .user-image {
+        position: absolute;
+        margin-top: -50px;
+    }
+
+    .user-left-part {
+        margin: 0px;
+    }
+
+    .user-image img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .user-profil-part {
+        padding-bottom: 30px;
+        background-color: #FAFAFA;
+    }
+
+    .follow {
+        margin-top: 70px;
+    }
+
+    .user-detail-row {
+        margin: 0px;
+    }
+
+    .user-detail-section2 p {
+        font-size: 12px;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .user-detail-section2 {
+        margin-top: 10px;
+    }
+
+        .user-detail-section2 span {
+            color: #7CBBC3;
+            font-size: 20px;
+        }
+
+        .user-detail-section2 small {
+            font-size: 12px;
+            color: #D3A86A;
+        }
+
+    .profile-right-section {
+        padding: 20px 0px 10px 15px;
+        background-color: #FFFFFF;
+    }
+
+    .profile-right-section-row {
+        margin: 0px;
+    }
+
+    .profile-header-section1 h1 {
+        font-size: 25px;
+        margin: 0px;
+    }
+
+    .profile-header-section1 h5 {
+        color: #0062cc;
+    }
+
+    .req-btn {
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .profile-tag {
+        padding: 10px;
+        border: 1px solid #F6F6F6;
+    }
+
+        .profile-tag p {
+            font-size: 12px;
+            color: black;
+        }
+
+        .profile-tag i {
+            color: #ADADAD;
+            font-size: 20px;
+        }
+
+    .image-right-part {
+        background-color: #FCFCFC;
+        margin: 0px;
+        padding: 5px;
+    }
+
+    .img-main-rightPart {
+        background-color: #FCFCFC;
+        margin-top: auto;
+    }
+
+    .image-right-detail {
+        padding: 0px;
+    }
+
+        .image-right-detail p {
+            font-size: 12px;
+        }
+
+        .image-right-detail a:hover {
+            text-decoration: none;
+        }
+
+    .image-right img {
+        width: 100%;
+    }
+
+    .image-right-detail-section2 {
+        margin: 0px;
+    }
+
+        .image-right-detail-section2 p {
+            color: #38ACDF;
+            margin: 0px;
+        }
+
+        .image-right-detail-section2 span {
+            color: #7F7F7F;
+        }
+
+    .nav-link {
+        font-size: 1.2em;
+    }
+  
+</style>
+
+    <div class="container main-secction mt-2">
+        <div class="row" style="background-color:white">
+            <div class="col-md-12 col-sm-12 col-xs-12 image-section">
+
+                <img src="~/cu.jpg" />
+            </div>
+            <div class="row user-left-part">
+                <div class="col-md-3 col-sm-3 col-xs-12 user-profil-part pull-left">
+                    <div class="row ">
+                        <div class="col-md-12 col-md-12-sm-12 col-xs-12 user-image text-center">
+                            <img src="~/logo.png" />
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 user-detail-section1 text-center">
+                            <h1 class="btn btn-success btn-block follow">جامعة القاهره</h1>
+                            
+                        </div>
+                        <div class="row user-detail-row">
+                            <div class="col-md-12 col-sm-12 user-detail-section2 pull-left">
+                                <div class="border"></div>
+                                <p>عدد المؤلفين</p>
+                                <span>320</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-9 col-sm-9 col-xs-12 pull-right profile-right-section">
+                    <div class="row profile-right-section-row">
+                       
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#profile" role="tab" data-toggle="tab"><i class="fas fa-info-circle" style="color:blue;"></i> معلومات عن المؤسسه</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#buzz" role="tab" data-toggle="tab">  <i class="fas fa-book" style="color:greenyellow;"></i> المجلات</a>
+                                        </li>
+                                    </ul>
+
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane fade show active" id="profile">
+                                            <div class="row" >
+                                                <div class="col-md-4">
+                                                    <p>البلد</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p>مصر</p>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <p>المؤشر H</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p>1</p>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <p>معامل التأثير</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p>1</p>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                        
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label>عدد الاستشهادات</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p>576</p>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label>عدد المقالات</label>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p>1032 </p>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane fade text-right" id="buzz">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <p>عدد المجلات</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p>7</p>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label>	مجلة العلوم الإنسانية والإدارية</label>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label>المجلة العلمية، العلوم الإنسانية والإدارية</label>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label>	مجلة كلية التربية</label>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label>	مجلة العلوم الاساسية والتطبيقية</label>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label>المجلة العلمية بجامعة القاهره</label>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label>	مجلة العلوم العلوم الإنسانية والإدارية</label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4 img-main-rightPart">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row image-right-part">
+                                                <div class="col-md-6 pull-left image-right-detail">
+                                                    <h6>تأسست عام 1816</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a href="http://camaradecomerciozn.com/">
+                                            <div class="col-md-12 image-right">
+                                                <img src="~/logo.png" style="width:250px; height:250px;" />
+                                            </div>
+                                        </a>
+                                        <div class="col-md-12 image-right-detail-section2">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 

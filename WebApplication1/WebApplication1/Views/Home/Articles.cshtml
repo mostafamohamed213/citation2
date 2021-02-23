@@ -1,0 +1,167 @@
+﻿<style>
+    .active-purple-2 input.form-control[type=text]:focus:not([readonly]) {
+        border-bottom: 1px solid #ce93d8;
+        box-shadow: 0 1px 0 0 #ce93d8;
+    }
+
+    .active-purple input.form-control[type=text] {
+        border-bottom: 1px solid #ce93d8;
+        box-shadow: 0 1px 0 0 #ce93d8;
+    }
+    .btn {
+        background-color: DodgerBlue;
+        border: none;
+        color: white;
+      
+        cursor: pointer;
+        font-size: 10px;
+    }
+
+        /* Darker background on mouse-over */
+        .btn:hover {
+            background-color: RoyalBlue;
+        }
+
+    .btn2 {
+        background-color:brown;
+        border: none;
+        color: white;
+
+        cursor: pointer;
+        font-size: 10px;
+    }
+
+        /* Darker background on mouse-over */
+        .btn2:hover {
+            background-color: RoyalBlue;
+        }
+    h2 {
+        color: white;
+        text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+    }
+    .my-custom-scrollbar {
+        position: relative;
+        height: 1000px;
+        overflow: auto;
+    
+    }
+
+    .table-wrapper-scroll-y {
+        display: block;
+    }
+</style>
+<div class="text-right">
+    <h2> المقالات</h2>
+    <hr />
+    <form class="form-inline d-flex justify-content-center md-form form-sm active-purple active-purple-2 mt-2">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="بحث"
+               aria-label="Search">
+    </form>
+    <hr />
+    <div class="row">
+        <div class="col-sm-3 bg-success" style="color:azure">
+            <h6 style="background-color:green; color:white; text-align:center" class="p-2">مجالات البحث </h6>
+            <div>
+                <input type="checkbox" />  العلوم الإنسانية والاجتماعية
+            </div>
+            <div>
+                <input type="checkbox" />   العلوم التربوية
+            </div>
+            <div>
+                <input type="checkbox" />   العلوم الشرعية
+            </div>
+            <div>
+                <input type="checkbox" />   العلوم العربية
+            </div>
+            <div>
+                <input type="checkbox" />    العلوم العربية والإنسانية
+            </div>
+
+            <h6 style="background-color:green; color:white; text-align:center" class="p-2">المؤسسات التعليميه</h6>
+            <div>
+                <input type="checkbox" />   جامعة عين شمس
+            </div>
+            <div>
+                <input type="checkbox" />    جامعة الكويت
+            </div>
+            <div>
+                <input type="checkbox" />    جامعة الإمام محمد بن سعود الإسلامية
+            </div>
+            <div>
+                <input type="checkbox" />    الجامعة الأردنية
+            </div>
+            <div>
+                <input type="checkbox" />    جامعة البحرين
+            </div>
+
+
+            <h6 style="background-color:green; color:white; text-align:center" class="p-2">المجلات</h6>
+            <div>
+                <input type="checkbox" />   مجلة دراسات
+            </div>
+            <div>
+                <input type="checkbox" />     مجلة القراءة والمعرفة
+            </div>
+            <div>
+                <input type="checkbox" />    مجلة العلوم التربوية والنفسية
+            </div>
+
+
+        </div>
+        <div class="col-sm-9 table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-bordered table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">البحث</th>
+                        <th scope="col">المؤلف</th>
+                        <th scope="col">تاريخ النشر</th>
+                        <th scope="col">المجله</th>
+                        <th scope="col">المؤسسه</th>
+                        <th scope="col">عدد الاستشهادات</th>
+                        <th scope="col">تحميل النبذه المختصره</th>
+                        <th scope="col">تحميل المقال</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>الدمج بين الأطفال ذوي متلازمة داون والأطفال العاديين وأثره على ذكائهم اللغوي والاجتماعي في مدارس التعليم العام بدولة الكويت</td>
+                        <td>محمد العجمي</td>
+                        <td>1/1/2019</td>
+                        <td>مجلة القراءة والمعرفة</td>
+                        <td>جامعة القاهره</td>
+                        <td>12</td>
+                        <td><button class="btn2"><i class="fa fa-download"></i> Download</button></td>
+                        <td><button class="btn"><i class="fa fa-download"></i> Download</button></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>العراق بين اتحادين دراسة مقارنة</td>
+                        <td>علي الشكراوي </td>
+                        <td>1/7/2009</td>
+                        <td>مجلة جامعة الكوفة للعلوم القانونية والسياسية</td>
+                        <td>جامعة الكوفه</td>
+                        <td>90</td>
+                        <td><button class="btn2"><i class="fa fa-download"></i> Download</button></td>
+                        <td><button class="btn"><i class="fa fa-download"></i> Download</button></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>المستدرك على كتاب تسمية شيوخ أبي داود- الجزء 2</td>
+                        <td>زياد منصور</td>
+                        <td>12/3/2020</td>
+                        <td>مجلة الجامعة الإسلامية</td>
+                        <td>الجامعة الإسلامية - المدينة المنورة</td>
+                        <td>12</td>
+                        <td><button class="btn2"><i class="fa fa-download"></i> Download</button></td>
+                        <td><button class="btn"><i class="fa fa-download"></i> Download</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
