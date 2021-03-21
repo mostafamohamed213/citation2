@@ -1,0 +1,278 @@
+﻿@model PaginatedList<Citations.Models.Magazine>
+
+@{
+    ViewData["Title"] = "SearchMagazine";
+    Layout = "_MainLayout";
+}
+<style>
+        .form-control:focus {
+            box-shadow: none;
+        }
+
+        .form-control-underlined {
+            border-width: 0;
+            border-bottom-width: 1px;
+            border-radius: 0;
+            padding-left: 0;
+        }
+
+        /*
+    *
+    * ==========================================
+    * FOR DEMO PURPOSE
+    * ==========================================
+    *
+    */
+
+
+
+</style>
+
+<div class="row mb-2 mt-3 ml-0" style="">
+    <div class="col-lg-11 mx-auto">
+
+        <div class="bg-white p-3 rounded shadow">
+
+            <!-- Custom rounded search bars with input group -->
+            <form asp-action="searchmagazine" id="myForm" class=" col-sm-12 row">
+                <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-1  col-sm-12" >
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button id="button-addon2" disabled class="btn btn-link text-warning"><i class="fa fa-search"></i></button>
+                        </div>
+                        <input type="search" id="magazinename" name="magazinename" value="@ViewData["CurrentFilter"]"  placeholder="بحث باسم المجلة" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class=" mb-1  ">
+
+                        <div class="demo">
+                            <select name="resfields" class="form-control" asp-items="ViewBag.allresfields" multiple style="display:none"></select>
+
+
+                        </div>
+                    </div>
+                </div>
+           
+                <div class="mb-1  col-sm-6">
+                    <div class="demo3">
+                        <select name="institutionids" class="form-control" asp-items="@ViewBag.institutions" multiple style="display:none"></select>
+
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <input type="submit" value="بحث" class="btn btn-success" />
+
+
+                </div>
+            </form>
+            <!-- End -->
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+<div class="table-responsive ml-0 mr-0 table-light">
+    <table class="table table-bordered table-striped mb-0">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+                </th>
+                <th>
+                    ISSN Online
+                </th>
+                <th>
+                    ISSN Print
+                </th>
+                <th>
+                    المؤسسة
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().WebsiteUrl)
+                </th>
+                @*<th>
+            @Html.DisplayNameFor(model => model.ImpactFactor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImmediateCoefficient)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AppropriateValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberOfCitations)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Active)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Institution)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Publisher)
+        </th>*@
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    <a asp-controller="MagazineForUser" asp-action="Details" asp-route-id="@item.Magazineid"> @Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IssnOnline)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IssnPrint)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Institution.Name)
+                </td>
+                <td>
+                    @if (item.WebsiteUrl != null)
+                    {
+                   <a href="@item.WebsiteUrl" target="_blank" > @item.WebsiteUrl</a>
+                    }
+                </td>
+                @*<td>
+            @Html.DisplayFor(modelItem => item.ImpactFactor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImmediateCoefficient)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AppropriateValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberOfCitations)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Active)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Publisher.Address)
+        </td>*@
+
+            </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+    @{
+        List<int> institutionids = (List<int>)ViewData["institutionids"];
+        List<int> resfieldids = (List<int>)ViewData["resfields"];
+
+
+
+        string institutions = string.Join(",", institutionids.ToArray());
+        string resfields = string.Join(",", resfieldids.ToArray());
+
+    }
+    <a asp-action="searchmagazine" value="Next &raquo;" class="btn btn-info  @prevDisabled  "
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       asp-route-pagesize="@ViewData["pagesize"]"
+       asp-route-navinstitutionids="@institutions"
+       asp-route-navresfields="@resfields"
+       asp-route-magazinename="@ViewData["magazinename"]"> السابق </a>
+
+
+    <a asp-action="searchmagazine" value="Next &raquo;" class="btn btn-info    @nextDisabled "
+       asp-route-pageNumber="@(Model.PageIndex +1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       asp-route-pagesize="@ViewData["pagesize"]"
+       asp-route-navinstitutionids="@institutions"
+       asp-route-navresfields="@resfields"
+       asp-route-magazinename="@ViewData["magazinename"]"> التالي </a>
+
+    <link href="~/Searchable-Multi-select-jQuery-Dropdown/jquery.dropdown.css" rel="stylesheet" />
+
+    <script src="~/Searchable-Multi-select-jQuery-Dropdown/jquery.dropdown.js"></script>
+    <script>
+        $("#clear").on('click', function () {
+            var instance = document.getElementsByClassName("demo")[0];
+            $(".demo").each(function () {
+                $(this).data('dropdown').reset();
+            });
+            document.getElementById("myForm").reset();
+
+        })
+
+
+
+        function navigate(PageIndex, CurrentFilter, pagesize, Articletittle) {
+            var kw = document.getElementsByName('keyWordids')[0];
+            for (var i in kw) {
+                alert(i + "=" + kw[i])
+            }
+            var selected = $("#keyWordids :selected").map((_, e) => e.value).get();
+            alert(selected);
+            var d = {
+
+                PageIndex: PageIndex,
+                CurrentFilter: CurrentFilter,
+                Articletittle: Articletittle,
+                pagesize: pagesize,
+
+            };
+            jQuery.ajax({
+                url: '/Search/Searchajax',
+                //contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+
+                data: d,
+                contentType: 'application/x-www-form-urlencoded',
+
+            }).done(function (result) {
+
+                jQuery('#mydiv').html(result);
+            });
+
+        }
+
+        $('.demo').dropdown({
+            multipleMode: 'label',
+            input: '<input type="text" class="p-1 bg-light rounded rounded-pill shadow-sm mb-4"  placeholder="بحث في مجالات البحث">',
+            searchNoData: '<li style="color:red">No Results</li>',
+            includeSelectAllOption: true,
+            choice: function (val) {
+
+            },
+            minCount: 1,
+
+            minCountErrorMessage: ' ',
+
+
+
+        });
+
+
+
+        $('.demo3').dropdown({
+            multipleMode: 'label',
+            input: '<input type="text" class="p-1 bg-light rounded rounded-pill shadow-sm mb-4"  placeholder="بحث في المؤسسات">',
+            searchNoData: '<li style="color:red">No Results</li>',
+            includeSelectAllOption: true,
+            choice: function (val) {
+
+            },
+            minCount: 1,
+
+            minCountErrorMessage: ' ',
+
+
+
+        });
+    </script>

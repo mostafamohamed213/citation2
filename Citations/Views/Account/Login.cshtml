@@ -1,0 +1,89 @@
+﻿@model LoginViewModel
+
+@{
+    Layout = null;
+}
+<link href="~/css/StyleSheetregister.css" rel="stylesheet" />
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- Custom Theme files -->
+    <!-- //Custom Theme files -->
+    <!-- web font -->
+    <!-- //web font -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-image: url('/images/moroccan-flower.png') !important;
+        }
+    </style>
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myInput");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- main -->
+    <div class="main-w3layouts wrapper">
+        <h1 style="color:forestgreen">تسجيل دخول</h1>
+        <div class="main-agileinfo" style="direction:rtl">
+            <div class="agileits-top bg-success">
+                <div asp-validation-summary="ModelOnly" class="text-danger bg-white"></div>
+                <form method="post">
+
+
+                    <input class="text email" type="email" asp-for="Email" placeholder="الايميل" required="">
+                    <span asp-validation-for="Email" class="text-danger bg-white"></span>
+
+                    <input class="text" type="password" asp-for="Password" id="myInput" placeholder="كلمة السر" required="">
+                    <div class="text-right">
+                        <span class="text-white">اظهار كلمة السر</span><input type="checkbox" onclick="myFunction()">
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger bg-white"></span>
+                    <div class="text-right">
+                        <label class="text-white" for="">
+                            تذكرني
+                        </label>
+                        <input asp-for="RememberMe" class="text-right">
+
+                    </div>
+
+                    <input type="submit" value="تسجيل دخول">
+                </form>
+                
+                <div class="text-right">
+                    <a asp-action="ForgotPassword" style="color:white; text-decoration:underline;">هل نسيت كلمة السر؟</a>
+                </div>
+
+                <p>لاتمتلك حساب؟ <a asp-controller="Account" asp-action="Register" style="color:white; text-decoration:underline;"> انشاء حساب!</a></p>
+            </div>
+        </div>
+
+
+    </div>
+    <!-- //main -->
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    }
+</body>
+
+</html>
+
+
+
+

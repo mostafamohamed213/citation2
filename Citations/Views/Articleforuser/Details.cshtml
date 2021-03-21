@@ -1,0 +1,226 @@
+﻿@model Citations.Models.Article
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "_MainLayout";
+}
+
+<div class="row mr-0 ml-0" >
+    <div class="col-sm-12">
+
+        <div class="row text-center mb-3 card-body m-2" style=" background-color: #fff; background-clip: border-box; border: 0 solid rgba(0,0,0,.125); border-radius: .25rem;">
+            <div class="col-sm-12 text-center">
+                <h4 style="color:green;text-align:center">عنوان المقال</h4>
+            </div>
+            <div class="col-sm-12  p-2" style="color:green">
+                <h5>@Model.Articletittle</h5>
+            </div>
+
+        </div>
+
+        @if (Model.ArticletittleEn != null && Model.ArticletittleEn != "")
+        {
+            <div class="row text-center mb-3 card-body m-2" style=" background-color: #fff; background-clip: border-box; border: 0 solid rgba(0,0,0,.125); border-radius: .25rem;">
+                <div class="col-sm-12 text-center">
+                    <h5 style="color:green;text-align:center">عنوان المقال باللغة الانجيليزية</h5>
+                </div>
+                <div class="col-sm-12  p-2" style="color:green">
+                    <p>@Model.ArticletittleEn</p>
+                </div>
+
+            </div>
+        }
+
+        @if (Model.BriefQuote != null && Model.BriefQuote != "")
+        {
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                النبذه المختصرة
+            </button>
+
+            <div id="collapseExample" class="collapse row mb-3 card-body m-2" style=" background-color: #080882; background-clip: border-box; border: 0 solid rgba(0,0,0,.125); border-radius: .25rem;">
+
+                <div class="col-sm-12  p-2" style="color:white">
+                    @Model.BriefQuote
+
+                </div>
+
+            </div>
+        }
+
+        @if (Model.BriefQuoteEn != null && Model.BriefQuoteEn != "")
+        {
+
+
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">
+                النبذه المختصرة باللغة الانجيليزية
+            </button>
+
+            <div id="collapseExample2" class="collapse row mb-3 card-body m-2" style=" background-color: #080882; background-clip: border-box; border: 0 solid rgba(0,0,0,.125); border-radius: .25rem;">
+
+                <div class="col-sm-12  p-2" style="color:white">
+                    @Model.BriefQuoteEn
+
+                </div>
+
+            </div>
+        }
+        <div class="row mt-2 mr-1 ml-1">
+            @if (Model.ArticleAuthores.Count() != 0)
+            {
+
+                <div class="table-responsive col-sm-7 ml-3" style=" background-color:#048213;  background-clip: border-box; border: 0 solid rgba(0,0,0,.125); border-radius: .25rem;">
+                    <h5 style="text-align:center; color:white">المؤلفون</h5>
+                    <table class="table table-bordered table-striped mb-3" style="color:white">
+
+                        @foreach (var x in Model.ArticleAuthores)
+                        {
+                            <tr class="mycontainers">
+                                <td style="text-align:center">
+                                    @x.Author.Name
+                                </td>
+                                <td style="text-align:center">
+                                    @(Html.Raw(x.MainAuthor ? "المؤلف الرئيسي" : "شارك في التأليف"))
+                                </td>
+
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+            <div class="col-sm-4 mr-1 p-2 text-center" style=" background-color: #fff; background-clip: border-box; border: 0 solid rgba(0,0,0,.125); border-radius: .25rem;">
+                @if (Model.ScannedArticlePdf != null)
+                {
+
+                    <a asp-action="DownloadAttachment" asp-route-id="@Model.Articleid" class="btn btn-primary ml-2 mr-2" role="button"><i class="fas fa-download fa-2x"></i> تحميل المقال</a>
+                    <br />
+                    <hr />
+
+
+                }
+
+                <div class="row ">
+                    <div class="col-sm-6">
+                        <h6>عدد الاستشهادات : @Model.NumberOfCitations</h6>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <h6>عدد المراجع: @Model.NumberOfReferences</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <br />
+        @*<div class="form-group">
+            <label asp-for="ArticleIssue" class="control-label"></label>
+            <select asp-for="ArticleIssue" class="form-control" asp-items="ViewBag.ArticleIssue"></select>
+            <span asp-validation-for="ArticleIssue" class="text-danger"></span>
+
+        </div>*@
+        @*@if (Model.KeyWords.Count() != 0)
+        {
+            <div class="form-group">
+                الكلمات الداله
+                <select asp-for="KeyWords" asp-items="ViewBag.key" id="multiSelectDropDown" class="form-control" multiple="multiple" disabled></select>
+            </div>
+        }*@
+        @if (Model.ArticleIssue != 0)
+        {
+            <div class="table-responsive" style=" background-color: #93ff97bd; background-clip: border-box; border: 0 solid rgba(0,0,0,.125); border-radius: .25rem;">
+                <table class="table table-bordered table-striped mb-0">
+                    <tr>
+                        <th style="text-align:center">المؤسسة</th>
+                        <th style="text-align:center">المجله</th>
+                        <th style="text-align:center">العدد</th>
+                        <th style="text-align:center">اصدار العدد</th>
+                        <th style="text-align:center">الصفحة</th>
+                    </tr>
+                    <tr class="mycontainers2" id="mainrows2">
+                        <td style="text-align:center">
+
+                            @Model.ArticleIssueNavigation.MagazineIssue.Magazine.Institution.Name
+
+                        </td>
+                        <td style="text-align:center">
+                            @Model.ArticleIssueNavigation.MagazineIssue.Magazine.Name
+
+                        </td>
+
+                        <td style="text-align:center">
+                            @Model.ArticleIssueNavigation.MagazineIssue.Issuenumber
+
+                        </td>
+
+                        <td style="text-align:center">
+                            @Model.ArticleIssueNavigation.IssuenumberOfIssue
+                        </td>
+                        <td style="text-align:center">
+
+                            @Model.Page
+
+                        </td>
+
+                    </tr>
+                </table>
+
+
+                @*<select asp-for="ArticleIssue" class="form-control" asp-items="ViewBag.ArticleIssue"></select>*@
+            </div>
+
+
+
+            <hr />
+        }
+
+
+
+
+
+        @if (Model.ArticleReferenceArticles.Count() != 0)
+        {
+
+            <div class="table-responsive mr-2 ml-2 col-sm-6 mb-5" style=" background-color:#080766eb;  background-clip: border-box; border: 0 solid rgba(0,0,0,.125); border-radius: .25rem;">
+                <h5 style="text-align:center; color:white">المصادر</h5>
+                <table class="table " style="color:white;">
+
+                    @foreach (var item in Model.ArticleReferenceArticles)
+                    {
+                        <tr>
+                            @if (item.Articleref != null)
+                            {
+                                <td>@item.Articleref.Articletittle </td>
+                            }
+                            @if (item.Book != null)
+                            {
+                                <td>@item.Book.Booktittle </td>
+                            }
+                            @if (item.Conference != null)
+                            {
+                                <td>@item.Conference.Conferencetittle </td>
+                            }
+
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        }
+
+
+    </div>
+        </div>
+
+
+
+
+     
+
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+         
+        }
+

@@ -1,0 +1,110 @@
+﻿@model Citations.Models.RegisterViewModel
+
+@{
+    ViewBag.Title = "User Registration";
+    Layout = null;
+}
+<link href="~/css/StyleSheetregister.css" rel="stylesheet" />
+<!DOCTYPE html>
+<html>
+<head>
+ 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- Custom Theme files -->
+  
+    <!-- //Custom Theme files -->
+    <!-- web font -->
+ 
+    <!-- //web font -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+   <style>
+       body {
+           background-image: url('/images/moroccan-flower.png') !important;
+       }
+   </style>
+</head>
+<body>
+    <!-- main -->
+    <div class="main-w3layouts wrapper">
+        <h1 style="color:forestgreen">انشاء حساب جديد</h1>
+        <div class="main-agileinfo" style="direction:rtl">
+            <div class="agileits-top bg-success">
+                <div asp-validation-summary="ModelOnly" class="text-danger bg-white"></div>
+                <form method="post">
+
+                    <input class="text" type="text" asp-for="FullName" placeholder="الاسم بالكامل" required="">
+                    <span asp-validation-for="FullName" class="text-danger bg-white"></span>
+                    <input class="text email" type="email" asp-for="Email" placeholder="الايميل" required="">
+                    <span asp-validation-for="Email" class="text-danger bg-white"></span>
+
+                    <input class="text" type="password" asp-for="Password" placeholder="كلمة السر" required="">
+                    <span asp-validation-for="Password" class="text-danger bg-white"></span>
+
+                    <input class="text w3lpass" type="password" asp-for="ConfirmPassword" placeholder="تأكيد كلمة السر" required="">
+                    <span asp-validation-for="ConfirmPassword" style="" class="text-danger bg-white"></span>
+
+                    <input class="text" type="text" asp-for="Address" placeholder="العنوان" required="">
+                    <span asp-validation-for="Address" class="text-danger bg-white"></span>
+                    <input type="submit" value="تسجيل">
+                </form>
+                <p>هل لديك حساب؟ <a asp-controller="Account" asp-action="Login"> تسجيل دخول!</a></p>
+            </div>
+        </div>
+
+    
+    </div>
+    <!-- //main -->
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+</body>
+
+</html>
+
+@*<div class="text-center bg-primary">
+        <h4 class="m-4">انشاء حساب</h4>
+
+        <div class="row mr-5 ml-0">
+            <div class="col-md-8">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="FullName">الاسم</label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email">الايميل</label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password">الرقم السري</label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword">تأكيد الرقم السري</label>
+                        <input asp-for="ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Address">العنوان</label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">تسجيل</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@

@@ -1,0 +1,103 @@
+﻿@model Citations.Models.Faculty
+
+@{
+    ViewData["Title"] = "Edit";
+}
+ 
+
+<h5>تعديل الكلية</h5>
+<hr />
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Facultyid" />
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+
+
+
+
+                @if (Model.FacultyInstitutions.Count != 0)
+                {
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        الجامعات التي تتواجد بها الكلية الان
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.FacultyInstitutions)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayName(item.Institution.Name)
+                                        </td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="demo">
+                        <label class="control-label"> اضافة جامعات</label>
+                        <select name="institutions" class="form-control" asp-items="ViewBag.institutions" multiple style="display:none" required></select>
+                    </div>
+                </div>
+
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="حفظ" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">الرجوع الي القائمة</a>
+    </div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+        <link href="~/Searchable-Multi-select-jQuery-Dropdown/jquery.dropdown.css" rel="stylesheet" />
+
+        <script src="~/Searchable-Multi-select-jQuery-Dropdown/jquery.dropdown.js"></script>
+
+        <script>
+            $('.demo').dropdown({
+                multipleMode: 'label',
+                input: '<input type="text" maxLength="20" placeholder="ابحث">',
+                searchNoData: '<li style="color:red">No Results</li>',
+                includeSelectAllOption: true,
+                choice: function (val) {
+
+                },
+                minCount: 1,
+
+                minCountErrorMessage: ' Required At least 1 field',
+
+
+
+            });
+
+        </script>
+    }

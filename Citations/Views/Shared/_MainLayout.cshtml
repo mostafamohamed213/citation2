@@ -1,0 +1,137 @@
+﻿@inject SignInManager<ApplicationUser> SignInManager
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الكشاف العربي</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="~/css/mainsite.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/d06448da53.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background-image: url('/images/moroccan-flower.png');
+            font-family: 'Tajawal', sans-serif !important;
+        }
+        #register {
+            background-color: #42b72a;
+            color: white;
+        }
+            #register:hover {
+                background-color:white;
+                color: #42b72a;
+            }
+        #login {
+            background-color: #1877f2;
+            color:white;
+        }
+        #login:hover {
+            background-color: white;
+            color: #1877f2;
+        }
+        #logout {
+            background-color:blueviolet;
+            color: white;
+        }
+
+            #logout:hover {
+                background-color: white;
+                color: blueviolet;
+            }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-success" style="height:50px;">
+
+            <a class="navbar-brand" asp-controller="MainHome" asp-action="Index"> الكشاف العربي  </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    @*<li class="nav-item active">
+                        <a class="nav-link" asp-controller="Account" asp-action="sendmail">sendmail <i class="fas fa-feather-alt" style="color:black; font-size:25px;"></i><span class="sr-only">(current)</span></a>
+                    </li>*@
+                    <li class="nav-item active">
+                        <a class="nav-link" asp-controller="Search" asp-action="SearchAuthers">المؤلفين <i class="fas fa-feather-alt" style="color:black; font-size:25px;"></i><span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" asp-controller="Search" asp-action="SearchArticle"> المقالات <i class="fas fa-scroll" style="color:burlywood;font-size:25px;"></i> </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" asp-controller="Institutionsforuser" asp-action="Index"> المؤسسات <i class="fas fa-landmark" style="color:cyan;font-size:25px;"></i></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" asp-controller="Search" asp-action="Searchmagazine">المجلات <i class="fas fa-book" style="color:chartreuse;font-size:25px;"></i></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" asp-controller="PublisherForUser" asp-action="Index"> الناشرون  <i class="nav-icon fas fas fa-store" style="color:gold; font-size:25px;"></i></a>
+                    </li>
+
+                </ul>
+                @*<form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="بحث بعنوان المقال" aria-label="Search">
+                        <button class="btn btn-outline-light my-2 m-2 my-sm-0" type="submit">بحث <i class="fas fa-search" style="color:aqua"></i></button>
+                    </form>*@
+                @if (SignInManager.IsSignedIn(User))
+                {
+
+                    <form method="post" asp-controller="account" asp-action="logout">
+                        <button type="submit" id="logout" style="width:auto"
+                                class="nav-link btn   py-0 m-2">
+                            تسجيل خروج
+                        </button>
+                    </form>
+
+
+                    <h6 class="text-white"> @User.Identity.Name</h6>
+
+                }
+                else
+                {
+
+                    <a class="nav-link btn m-2"  id="register" style=" "  asp-controller="account" asp-action="register">
+                        انشاء حساب
+                    </a>
+
+
+                    <a class="nav-link btn m-2" id="login" style=" " asp-controller="account" asp-action="login">
+                        تسجيل دخول
+                    </a>
+
+                }
+
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid" style="  padding-right: 0px; padding-left: 0px; direction:rtl !important; text-align: right !important;">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="main-footer bg-success">
+        <!-- To the right -->
+        <div class="float-right d-none d-sm-inline m-2" style="color:white;">
+
+            جميع الحقوق محفوظة
+            <strong> &copy; الكشاف العربي </strong>
+        </div>
+        <!-- Default to the left -->
+        <p class="m-2" style="color:white;">
+            تم التطوير بواسطة شركة دقة للبرمجيات
+        </p>
+    </footer>
+  
+    <!-- Optional JavaScript -->
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

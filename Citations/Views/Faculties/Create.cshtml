@@ -1,0 +1,66 @@
+﻿@model Citations.Models.Faculty
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+ 
+
+<h5>الكليات</h5>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="demo">
+                    <label class="control-label"> الجامعات</label>
+                    <select name="institutions" class="form-control" asp-items="ViewBag.institutions" multiple style="display:none; width:100%;" required></select>
+                </div>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" checked="checked" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="حفظ" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">الرجوع الي القائمة</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link href="~/Searchable-Multi-select-jQuery-Dropdown/jquery.dropdown.css" rel="stylesheet" />
+
+    <script src="~/Searchable-Multi-select-jQuery-Dropdown/jquery.dropdown.js"></script>
+
+    <script>
+        $('.demo').dropdown({
+            multipleMode: 'label',
+            input: '<input type="text" maxLength="20" placeholder="ابحث">',
+            searchNoData: '<li style="color:red">لاتوجد نتائج</li>',
+            includeSelectAllOption: true,
+            choice: function (val) {
+
+            },
+            minCount: 1,
+
+            minCountErrorMessage: 'هذا الحقل مطلوب',
+
+
+
+        });
+    </script>
+}

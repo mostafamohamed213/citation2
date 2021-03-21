@@ -1,0 +1,234 @@
+﻿@model PaginatedList<Citations.Models.Author>
+@{
+    ViewData["Title"] = "SearchAuthores";
+    Layout = "_MainLayout";
+}
+<style>
+    .form-control:focus {
+        box-shadow: none;
+    }
+
+    .form-control-underlined {
+        border-width: 0;
+        border-bottom-width: 1px;
+        border-radius: 0;
+        padding-left: 0;
+    }
+
+    /*
+    *
+    * ==========================================
+    * FOR DEMO PURPOSE
+    * ==========================================
+    *
+    */
+
+
+
+</style>
+
+<div class="row mb-2 mt-3 ml-0" style="">
+    <div class="col-lg-11 mx-auto">
+
+        <div class="bg-white p-3 rounded shadow">
+
+            <!-- Custom rounded search bars with input group -->
+            <form asp-action="Searchauthers" id="myForm" class="row col-sm-12">
+                <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4  col-sm-12">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button id="button-addon2" disabled class="btn btn-link text-warning"><i class="fa fa-search"></i></button>
+                        </div>
+                        <input type="search" id="authername" name="authername" placeholder="بحث باسم المؤلف" value="@ViewData["CurrentFilter"]" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+
+                    </div>
+                </div>
+                <div class=" col-sm-4">
+                    <div class=" mb-1">
+
+                        <div class="demo">
+
+
+                            <select name="resfields" class="form-control" asp-items="ViewBag.allresfields" multiple style="display:none"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-1  col-sm-4">
+                    <div class="demo2">
+
+                        <select name="magazinids" class="form-control" asp-items="ViewBag.magazins" multiple style="display:none"></select>
+                    </div>
+                </div>
+                <div class="mb-1  col-sm-4">
+                    <div class="demo3">
+                        <select name="institutionids" class="form-control" asp-items="@ViewBag.institutions" multiple style="display:none"></select>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <input type="submit" value="بحث" class="btn btn-success" />
+
+
+                </div>
+            </form>
+            <!-- End -->
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+<div class="row ml-0">
+    @{
+        int i = 0;
+        foreach (var item in Model)
+        {
+            if (i % 2 == 0)
+            {
+                <div class="table-responsive col-md-5 ml-3 table-light" style=" margin-right:5%;">
+                    <table class="table table-bordered mb-0">
+
+                        <tbody>
+
+                            <tr>
+                                <td style="width:50%;">
+                                    <a asp-controller="authorspro" asp-action="Details" asp-route-id="@item.Authorid">  <img src="/AutherImages/@item.ScannedAuthorimage" class="rounded-circle" style="width:100px;height:100px" /></a>
+                                </td>
+
+                                <td style="width:50%;">
+                                    <a asp-controller="authorspro" asp-action="Details" asp-route-id="@item.Authorid">        <h6 style="font-weight:bold">    @Html.DisplayFor(modelItem => item.Name) </h6> </a>
+                                </td>
+
+
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive col-md-5 table-light"  style="margin-right:5%;">
+                    <table class="table table-bordered mb-0">
+
+                        <tbody>
+
+                            <tr>
+                                <td style="width:50%;">
+                                    <a asp-controller="authorspro" asp-action="Details" asp-route-id="@item.Authorid">  <img src="/AutherImages/@item.ScannedAuthorimage" class="rounded-circle" style="width:100px;height:100px" /></a>
+                                </td>
+
+                                <td style="width:50%;">
+                                    <a asp-controller="authorspro" asp-action="Details" asp-route-id="@item.Authorid">    <h6 style="font-weight:bold">    @Html.DisplayFor(modelItem => item.Name) </h6> </a>
+                                </td>
+
+
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            }
+            i++;
+        }
+    }
+</div>
+    @{
+        List<int> institutionids = (List<int>)ViewData["institutionids"];
+        List<int> resfieldids = (List<int>)ViewData["resfields"];
+        List<int> magazinids = (List<int>)ViewData["magazinids"];
+
+
+        string institutions = string.Join(",", institutionids.ToArray());
+        string resfields = string.Join(",", resfieldids.ToArray());
+        string magazins = string.Join(",", magazinids.ToArray());
+    }
+    <a asp-action="searchauthers" value="Next &raquo;" class="btn btn-info  @prevDisabled  "
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       asp-route-pagesize="@ViewData["pagesize"]"
+       asp-route-navinstitutionids="@institutions"
+       asp-route-navresfields="@resfields"
+       asp-route-navmagazinids="@magazins"
+       asp-route-authername="@ViewData["authername"]"> السابق </a>
+
+
+    <a asp-action="searchauthers" value="Next &raquo;" class="btn btn-info    @nextDisabled "
+       asp-route-pageNumber="@(Model.PageIndex +1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       asp-route-pagesize="@ViewData["pagesize"]"
+       asp-route-navinstitutionids="@institutions"
+       asp-route-navresfields="@resfields"
+       asp-route-navmagazinids="@magazins"
+       asp-route-authername="@ViewData["authername"]"> التالي </a>
+
+    <link href="~/Searchable-Multi-select-jQuery-Dropdown/jquery.dropdown.css" rel="stylesheet" />
+
+    <script src="~/Searchable-Multi-select-jQuery-Dropdown/jquery.dropdown.js"></script>
+    <script>
+        $("#clear").on('click', function () {
+            var instance = document.getElementsByClassName("demo")[0];
+            $(".demo").each(function () {
+                $(this).data('dropdown').reset();
+            });
+            document.getElementById("myForm").reset();
+
+        })
+
+
+
+        $('.demo').dropdown({
+            multipleMode: 'label',
+            input: '<input type="text" class="p-1 bg-light rounded rounded-pill shadow-sm mb-4"  placeholder="بحث في مجالات البحث">',
+            searchNoData: '<li style="color:red">No Results</li>',
+            includeSelectAllOption: true,
+            choice: function (val) {
+
+            },
+            minCount: 1,
+
+            minCountErrorMessage: ' ',
+
+
+
+        });
+
+        $('.demo2').dropdown({
+            multipleMode: 'label',
+            input: '<input type="text" class="p-1 bg-light rounded rounded-pill shadow-sm mb-4"  placeholder="بحث في المجلات">',
+            searchNoData: '<li style="color:red">No Results</li>',
+            includeSelectAllOption: true,
+            choice: function (val) {
+
+            },
+            minCount: 1,
+
+            minCountErrorMessage: ' ',
+
+
+
+        });
+
+        $('.demo3').dropdown({
+            multipleMode: 'label',
+            input: '<input type="text" class="p-1 bg-light rounded rounded-pill shadow-sm mb-4"  placeholder="بحث في المؤسسات">',
+            searchNoData: '<li style="color:red">No Results</li>',
+            includeSelectAllOption: true,
+            choice: function (val) {
+
+            },
+            minCount: 1,
+
+            minCountErrorMessage: ' ',
+
+
+
+        });
+    </script>

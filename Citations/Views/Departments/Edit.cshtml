@@ -1,0 +1,132 @@
+﻿@model Citations.Models.Department
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Departmentid" />
+            <div class="form-group col-md-6">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            @if (Model.FacultyInstitutionDepartments.Count != 0)
+            {
+                <div class="table-responsive col-sm-8">
+                    <table class="table table-bordered table-striped mb-2">
+                        <thead>
+                            <tr>
+                                <th width="100px">الجامعة</th>
+                                <th width="100px"> الكلية</th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model.FacultyInstitutionDepartments)
+                        {
+                            <tr>
+                                <td> @Html.DisplayName(item.FacultyInstitution.Institution.Name)</td>
+                                <td>                    @Html.DisplayName(item.FacultyInstitution.Faculty.Name)</td>
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+            }
+
+            <div class="details table-responsive">
+
+                <table class="table table-bordered table-striped mb-2">
+                    <tr>
+                        <td>المؤسسة</td>
+
+                        <td>الكلية</td>
+                        <th>اضافه</th>
+
+
+
+
+
+                    </tr>
+                    <tr class="mycontainer" id="mainrow">
+                        <td width="20%">
+
+                            <select id="Institutions" name="institutions" asp-items="@ViewBag.Institutionid" required class="pc form-control" onchange="LoadFuclty(this)">
+                                <option value="0">Select</option>
+                            </select>
+                            <span class="error">Select Institution</span>
+
+                        </td>
+
+                        <td width="20%">
+                            <select id="Faculty" name="Faculty" class="product form-control" required onchange="LoadDepartment(this)">
+                                <option value="0">Select</option>
+                            </select>
+                            <span class="error">Select Faculty</span>
+                        </td>
+
+
+                        @*<td>
+                        <input type="text" id="rate" class="rate form-control" />
+                        <span class="error">Valid rate required</span>
+                    </td>*@
+                        <td width="25%">
+                            <input type="button" id="addinstitfac" value="اضافه" style="width:80px" class="btn btn-success" />
+                        </td>
+                    </tr>
+                </table>
+
+
+
+
+                <div id="orderItems" class="table-responsive">
+                    <table class="table table-bordered table-striped mb-0" id="instfac"></table>
+                    <span id="orderItemError" style="color:red"></span>
+                </div>
+
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="حفظ" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+    <div>
+        <a asp-action="Index">الرجوع الي القائمة</a>
+    </div>
+
+    <script src="~/js/ShamsScripts.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    @*<script src="~/js/myScripts.js"></script>*@
+    <script type="text/javascript">
+
+    </script>
+    <style>
+        span.error {
+            display: block;
+            visibility: hidden;
+            color: red;
+            font-size: 90%;
+        }
+
+        tr.error {
+            background-color: rgba(255,0,0,0.35);
+        }
+    </style>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

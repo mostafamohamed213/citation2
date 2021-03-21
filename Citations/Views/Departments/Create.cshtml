@@ -1,0 +1,120 @@
+﻿@model Citations.Models.Department
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+ 
+
+<h5 class="text-danger">@ViewBag.exist</h5>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group col-md-6">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="details">
+                <h6 class="text-danger">
+                    يجب اضافة مؤسسة وكلية واحده علي الاقل
+                </h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped mb-0">
+                        <tr>
+                            <th>المؤسسة</th>
+
+                            <th>الكلية</th>
+
+
+                            <th>اضافه</th>
+
+
+
+                        </tr>
+                        <tr class="mycontainer" id="mainrow">
+                            <td style="text-align:center">
+
+                                <select id="Institutions" style="width:100%;" name="institutions" asp-items="@ViewBag.Institutionid" required class="pc form-control" onchange="LoadFuclty(this)">
+                                    <option value="0">اختر المؤسسة</option>
+                                </select>
+                                <span class="error">اختر المؤسسة</span>
+
+                            </td>
+
+                            <td style="text-align:center">
+                                <select id="Faculty" name="Faculty" style="width:100%;" class="product form-control" required onchange="LoadDepartment(this)">
+                                    <option value="0">اختر الكلية</option>
+                                </select>
+                                <span class="error">اختر الكلية</span>
+                            </td>
+
+
+                            @*<td>
+                            <input type="text" id="rate" class="rate form-control" />
+                            <span class="error">Valid rate required</span>
+                        </td>*@
+                            <td>
+                                <input type="button" id="addinstitfac" value="اضافة" style="width:80px" class="btn btn-success" />
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+
+
+                <div id="orderItems" class="table-responsive">
+                    <table class="table table-bordered table-striped mb-0" id="instfac"></table>
+                    <span id="orderItemError" style="color:red"></span>
+                </div>
+
+
+
+
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" checked="checked" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="حفظ" class="btn btn-primary" disabled="disabled" id="btnsubmit" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">الرجوع الي القائمة</a>
+</div>
+<script src="~/js/ShamsScripts.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+@*<script src="~/js/myScripts.js"></script>*@
+
+<style>
+    span.error {
+        display: block;
+        visibility: hidden;
+        color: red;
+        font-size: 90%;
+    }
+
+    tr.error {
+        background-color: rgba(255,0,0,0.35);
+    }
+</style>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript">
+    $(document).ready(function () {
+ 
+        $("#Faculty").select2();
+        $("#Institutions").select2();
+   
+    });
+</script>
+}

@@ -1,0 +1,145 @@
+﻿
+@model PaginatedList<Citations.Models.Author>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<link href="~/css/settingsstile.css" rel="stylesheet" />
+<h1 class="m-2">المؤلفون</h1>
+
+
+<div class="col-sm-3">
+    <a asp-action="Create" class="btn btn-grad">اضافة مؤلف جديد</a>
+</div>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions row">
+
+        <div class="col-sm-9">
+            <div class="input-group">
+                <input type="search" class="form-control rounded" placeholder="بحث باسم المؤلف" aria-label="Search"
+                       aria-describedby="search-addon" name="SearchString" value="@ViewData["CurrentFilter"]" />
+                <button type="submit" class="btn btn-outline-primary">بحث</button>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <a asp-action="Index">الرجوع الي القائمة</a>
+        </div>
+    </div>
+
+</form>
+<hr />
+<div class="table-responsive">
+    <table class="table table-bordered table-striped mb-0">
+        <thead>
+            <tr>
+                <th>
+                    الاسم
+                </th>
+
+
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().PointerH)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstOrDefault().Active)
+                </th>
+                <th>
+                   التفاصيل والتعديل
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+
+                <tr id="tr_@item.Authorid">
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PointerH)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Active)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Authorid" class="btn btn-primary mr-2 eda" title="Edit"> التفاصيل والتعديل</a>
+                    
+                    </td>
+
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    </div>
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="index" value="Next &raquo;" class="btn btn-info  @prevDisabled  "
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-CurrentFilter="@ViewData["CurrentFilter"]"> السابق </a>
+
+
+    <a asp-action="index" value="Next &raquo;" class="btn btn-info    @nextDisabled "
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       asp-route-CurrentFilter="@ViewData["CurrentFilter"]">التالي </a>
+
+
+
+    <script>
+        function confirmdelete(Authorid) {
+
+            Swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+
+
+            }).then((result) => {
+
+
+                if (result.value == true) {
+                    $.ajax({
+
+                        type: 'POST',
+                        url: '/Authors/Delete/' + JSON.stringify(Authorid),
+                        data: { Authorid },
+                        contentType: 'application/json',
+                        datatype: "json",
+
+
+                        success: function (response) {
+
+                            var id = 'tr_' + Authorid;
+                            var tr = document.getElementById(id);
+                            tr.remove();
+                            Swal({
+                                title: "Deleted",
+                                text: "Done!",
+                                type: 'success'
+                            })
+
+                        },
+                        error: function (err, result) {
+                            alert("Error in delete" + err.responseText);
+                        }
+                    })
+
+
+                }
+
+            })
+        }
+    </script>
